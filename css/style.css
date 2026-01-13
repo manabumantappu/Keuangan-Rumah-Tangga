@@ -274,87 +274,65 @@ body.dark.ramadhan #quoteText {
   opacity: 1 !important;
   visibility: visible !important;
 }
-/* ===== FOOTER ISLAMI PREMIUM ===== */
+/* ===== FOOTER PREMIUM DENGAN BAR QUOTE ===== */
 .footer-premium {
   margin-top: 48px;
-  padding: 36px 20px 28px;
-  background: linear-gradient(
-    180deg,
-    rgba(15, 118, 110, 0.95),
-    rgba(11, 95, 90, 0.98)
-  );
+  padding: 0;
+  background: linear-gradient(180deg, #0f766e, #0b5f5a);
   color: #ecfdf5;
 }
 
-.footer-inner {
-  max-width: 1100px;
-  margin: 0 auto;
+/* BAR UTAMA */
+.footer-bar {
+  position: relative;
+  padding: 26px 20px;
   text-align: center;
+
+  background: linear-gradient(
+    90deg,
+    rgba(15,118,110,0.9),
+    rgba(22,163,74,0.9),
+    rgba(15,118,110,0.9)
+  );
+
+  border-radius: 0 0 24px 24px;
 }
 
-/* Kutipan */
-.footer-quote {
-  max-width: 880px;
-  margin: 0 auto 20px;
-  padding: 16px 22px;
-
-  background: rgba(255,255,255,0.08);
-  border-left: 4px solid #22c55e;
-  border-radius: 14px;
-
-  font-style: italic;
-  line-height: 1.8;
-  color: #dcfce7;
-
-  animation: fadeQuote 0.8s ease-in-out;
-}
-
+/* BISMILLAH */
 .quote-icon {
   display: block;
-  font-size: 1.3rem;
-  margin-bottom: 6px;
+  font-size: 1.4rem;
+  margin-bottom: 8px;
   color: #a7f3d0;
 }
 
-/* Divider */
-.footer-divider {
-  height: 1px;
-  width: 60%;
-  margin: 20px auto;
-  background: linear-gradient(
-    to right,
-    transparent,
-    rgba(255,255,255,0.35),
-    transparent
-  );
+/* QUOTE TEXT — INI YANG TADI HILANG */
+#quoteText {
+  display: block;
+  max-width: 900px;
+  margin: 0 auto;
+
+  font-size: 0.95rem;
+  font-style: italic;
+  line-height: 1.8;
+
+  color: #ecfdf5;          /* PENTING */
+  opacity: 1;              /* PENTING */
+  z-index: 2;
+  position: relative;
 }
 
-/* Bottom */
+/* BOTTOM */
 .footer-bottom {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  padding: 16px;
+  text-align: center;
   font-size: 0.85rem;
+  background: rgba(0,0,0,0.15);
 }
 
 .footer-brand {
   font-weight: 700;
-  letter-spacing: 0.4px;
   color: #bbf7d0;
-}
-
-.footer-copy {
-  color: #d1fae5;
-}
-
-/* ===== RAMADHAN MODE ===== */
-body.ramadhan .footer-premium {
-  background: linear-gradient(180deg, #78350f, #92400e);
-}
-
-body.ramadhan .footer-quote {
-  border-left-color: #facc15;
-  color: #fef3c7;
 }
 
 /* ===== DARK MODE ===== */
@@ -362,32 +340,23 @@ body.dark .footer-premium {
   background: linear-gradient(180deg, #020617, #022c22);
 }
 
-body.dark .footer-quote {
-  background: rgba(255,255,255,0.06);
-  border-left-color: #22c55e;
-  color: #dcfce7;
+body.dark .footer-bar {
+  background: linear-gradient(
+    90deg,
+    rgba(2,6,23,0.9),
+    rgba(15,118,110,0.8),
+    rgba(2,6,23,0.9)
+  );
 }
 
-body.dark.ramadhan .footer-premium {
-  background: linear-gradient(180deg, #0f172a, #78350f);
+/* ===== RAMADHAN MODE ===== */
+body.ramadhan .footer-bar {
+  background: linear-gradient(90deg, #78350f, #92400e, #78350f);
 }
 
-/* Animasi */
-@keyframes fadeQuote {
-  from { opacity: 0; transform: translateY(6px); }
-  to   { opacity: 1; transform: translateY(0); }
+body.ramadhan #quoteText {
+  color: #fef3c7;
 }
 
-/* ===== MOBILE OPTIMIZATION ===== */
-@media (max-width: 640px) {
-  .footer-quote {
-    font-size: 0.9rem;
-    padding: 14px 16px;
-  }
-
-  .footer-divider {
-    width: 80%;
-  }
-}
 
 
