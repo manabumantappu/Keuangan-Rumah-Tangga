@@ -85,4 +85,20 @@ body.ramadhan{background:linear-gradient(135deg,#1b5e20,#004d40)}
   color: #2e7d32;
   margin-top: 10px;
 }
+.footer {
+  margin-top: 40px;
+  padding: 20px;
+  text-align: center;
+  background: rgba(255,255,255,0.85);
+  color: #2e7d32;
+  border-top: 2px solid #c8e6c9;
+  font-weight: 600;
+}
+
+.footer small {
+  display: block;
+  margin-top: 6px;
+  font-weight: 400;
+  color: #555;
+}
 
