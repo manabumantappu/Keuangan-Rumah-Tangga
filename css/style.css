@@ -271,5 +271,13 @@ body.dark.ramadhan #quoteText {
 .edit-btn:hover {
   background: #1d4ed8;
 }
+/* ===== HAPUS GARIS / BAR DI FOOTER ===== */
+.footer::before,
+.footer::after,
+.footer .progress,
+.footer hr {
+  display: none !important;
+  content: none !important;
+}
 
 
