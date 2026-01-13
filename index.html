@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Keuangan Rumah Tangga</title>
+  <title>Keuangan Rumah Tangga Islami</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- Font -->
@@ -17,8 +17,8 @@
 <body>
 
 <header>
-  <h1>💰 Keuangan Rumah Tangga</h1>
-  <p>Kelola keuangan keluarga dengan mudah & profesional</p>
+  <h1>Keuangan Rumah Tangga</h1>
+  <p>Kelola rezeki keluarga secara bijak & berkah</p>
 </header>
 
 <main class="container">
@@ -41,10 +41,18 @@
       <h3>Tabungan</h3>
       <p id="saving">Rp 0</p>
     </div>
-    <div id="warningBox" class="warning hidden"></div>
   </section>
 
-  <!-- FORM INPUT -->
+  <!-- WARNING -->
+  <div id="warningBox" class="warning hidden"></div>
+
+  <!-- FILTER BULAN -->
+  <section class="filter-section">
+    <h2>📅 Filter Bulanan</h2>
+    <input type="month" id="monthFilter">
+  </section>
+
+  <!-- FORM -->
   <section class="form-section">
     <h2>➕ Tambah Transaksi</h2>
     <form id="transactionForm">
@@ -71,7 +79,7 @@
     </form>
   </section>
 
-  <!-- TABEL -->
+  <!-- TABLE -->
   <section>
     <h2>📋 Riwayat Transaksi</h2>
     <table>
@@ -88,13 +96,8 @@
       <tbody id="transactionTable"></tbody>
     </table>
   </section>
-  
-<section class="filter-section">
-  <h2>📅 Filter Bulanan</h2>
-  <input type="month" id="monthFilter">
-</section>
-  
-  <!-- GRAFIK -->
+
+  <!-- CHART -->
   <section class="chart-section">
     <div class="chart-card">
       <h3>Pemasukan vs Pengeluaran</h3>
@@ -107,6 +110,10 @@
   </section>
 
 </main>
+
+<footer class="footer">
+  <p>“Ya Allah, berkahilah rezeki keluarga kami.”</p>
+</footer>
 
 <script src="js/app.js"></script>
 </body>
