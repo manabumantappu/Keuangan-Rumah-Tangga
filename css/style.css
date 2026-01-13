@@ -535,6 +535,9 @@ body.compact .chart-section {
 body.compact .dashboard {
   grid-template-columns: 1fr;
 }
+table {
+  -webkit-overflow-scrolling: touch;
+}
 
 
 
