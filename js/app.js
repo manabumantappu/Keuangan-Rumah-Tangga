@@ -369,5 +369,15 @@ if(compactToggle){
     document.body.classList.toggle("compact", compactToggle.checked);
   };
 }
+// ===== Feedback Visual Saat Simpan =====
+transactionForm.onsubmit = e => {
+  e.preventDefault();
+
+  // existing logic ...
+
+  const btn = transactionForm.querySelector("button");
+  btn.innerText = "✔️ Tersimpan";
+  setTimeout(()=>btn.innerText="Simpan",1000);
+};
 
 
