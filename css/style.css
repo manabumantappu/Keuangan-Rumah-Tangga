@@ -269,5 +269,10 @@ body.dark.ramadhan #quoteText {
 .edit-btn:hover {
   background: #1d4ed8;
 }
+.footer small {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
 
 
