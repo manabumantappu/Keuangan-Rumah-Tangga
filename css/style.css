@@ -87,25 +87,39 @@ body.ramadhan{background:linear-gradient(135deg,#1b5e20,#004d40)}
 }
 .footer {
   margin-top: 40px;
-  padding: 20px;
+  padding: 28px 16px;
   text-align: center;
-  background: rgba(255,255,255,0.85);
-  color: #2e7d32;
-  border-top: 2px solid #c8e6c9;
-  font-weight: 600;
+
+  /* gradasi senada dashboard */
+  background: linear-gradient(135deg, #0f766e, #115e59, #134e4a);
+
+  color: #e6fffa;
+  border-top: 3px solid rgba(255,255,255,0.15);
 }
 
-.footer small {
-  display: block;
-  margin-top: 6px;
-  font-weight: 400;
-  color: #555;
-}
+/* kutipan ayat / hadits */
 #quoteText {
+  display: block;
+  max-width: 820px;
+  margin: 0 auto 14px;
+  padding: 12px 18px;
+
   font-style: italic;
-  color: #1b5e20;
-  max-width: 700px;
-  margin: 8px auto 0;
-  line-height: 1.6;
+  font-size: 0.95rem;
+  line-height: 1.7;
+
+  color: #dcfce7;
+  background: rgba(255,255,255,0.08);
+  border-left: 4px solid #22c55e;
+  border-radius: 10px;
 }
+
+/* copyright */
+.footer p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #bbf7d0;
+}
+
 
