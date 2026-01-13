@@ -14,25 +14,53 @@ function filtered(){
 }
 
 function renderDashboard(){
-  let inc=0, exp=0, sed=0;
+  let inc = 0, exp = 0, sed = 0;
+
+  // hitung total
   filtered().forEach(t=>{
-    if(t.type==="income") inc+=t.amount;
-    else if(t.type==="expense") exp+=t.amount;
-    else sed+=t.amount;
+    if(t.type === "income") inc += t.amount;
+    else if(t.type === "expense") exp += t.amount;
+    else if(t.type === "sedekah") sed += t.amount;
   });
 
+  // tampilkan ringkasan
   totalIncome.innerText = rupiah(inc);
   totalExpense.innerText = rupiah(exp);
-  balance.innerText = rupiah(inc-exp);
-  saving.innerText = rupiah((inc-exp)*0.2);
+  balance.innerText = rupiah(inc - exp);
+  saving.innerText = rupiah((inc - exp) * 0.2);
   sedekahValue.innerText = rupiah(sed);
-  zakatValue.innerText = rupiah((inc-exp)>=85000000?(inc-exp)*0.025:0);
+  zakatValue.innerText = rupiah(
+    (inc - exp) >= 85000000 ? (inc - exp) * 0.025 : 0
+  );
 
-  const limit=isRamadhan?0.7:0.8;
-  if(exp>=inc*limit){
+  // ===== REKOMENDASI SEDEKAH (BENAR) =====
+  const persenSedekah = isRamadhan ? 0.08 : 0.05;
+  const rekomendasi = inc * persenSedekah;
+
+  document.getElementById("sedekahRecommend").innerText =
+    rupiah(rekomendasi);
+
+  const kurang = rekomendasi - sed;
+  const note = document.getElementById("sedekahNote");
+
+  if(kurang > 0){
+    note.innerText =
+      `💡 Disarankan menambah sedekah sebesar ${rupiah(kurang)}`;
+    note.style.color = "#c62828";
+  } else {
+    note.innerText = "✅ Sedekah bulan ini sudah mencukupi";
+    note.style.color = "#0f9d58";
+  }
+
+  // ===== PERINGATAN BOROS =====
+  const limit = isRamadhan ? 0.7 : 0.8;
+  if(exp >= inc * limit){
     warningBox.classList.remove("hidden");
-    warningBox.innerText="⚠️ Pengeluaran mendekati/melewati pemasukan";
-  } else warningBox.classList.add("hidden");
+    warningBox.innerText =
+      "⚠️ Pengeluaran mendekati/melewati pemasukan";
+  } else {
+    warningBox.classList.add("hidden");
+  }
 }
 
 function renderAnalysis(){
