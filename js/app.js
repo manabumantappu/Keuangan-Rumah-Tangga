@@ -13,9 +13,13 @@ function filtered(){
   });
 
   // 🔐 fallback: jangan pernah tampilkan kosong kalau data ada
-  if(data.length === 0 && transactions.length > 0){
-    return transactions;
-  }
+ function filtered(){
+  return transactions.filter(t=>{
+    return (!selectedMonth || t.date.startsWith(selectedMonth)) &&
+           (selectedUser === "all" || t.user === selectedUser);
+  });
+}
+
 
   return data;
 }
@@ -124,13 +128,20 @@ function renderTable(){
   });
 }
 function deleteTransaction(index){
+  const list = filtered();
+  if(!list[index]) return;
+
   const yakin = confirm("Yakin ingin menghapus transaksi ini?");
   if(!yakin) return;
 
-  transactions.splice(index, 1);
+  const realIndex = transactions.indexOf(list[index]);
+  if(realIndex === -1) return;
+
+  transactions.splice(realIndex, 1);
   save();
   update();
 }
+
 
 let bar,pie;
 function renderCharts(){
