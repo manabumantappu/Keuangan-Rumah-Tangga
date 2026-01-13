@@ -5,6 +5,152 @@
   <title>Keuangan Rumah Tangga Islami</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- ================= PIN LOCK ================= -->
+<div id="pinOverlay" class="pin-overlay hidden">
+  <div class="pin-box">
+    <h3>🔐 Masukkan PIN</h3>
+    <input type="password" id="pinInput" placeholder="4 digit PIN">
+    <button onclick="checkPIN()">Masuk</button>
+    <p id="pinMsg"></p>
+
+    <div class="pin-helper">
+      <button class="link-btn" onclick="showForgotPIN()">❓ Lupa PIN</button>
+      <button class="link-btn" onclick="showResetPIN()">🔁 Reset PIN</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= LUPA PIN ================= -->
+<div id="forgotOverlay" class="pin-overlay hidden">
+  <div class="pin-box">
+    <h3>❓ Lupa PIN</h3>
+    <p>Pertanyaan Keamanan:</p>
+    <p><strong>Nama anak pertama?</strong></p>
+    <input type="text" id="securityAnswer" placeholder="Jawaban">
+    <button onclick="verifySecurity()">Verifikasi</button>
+    <p id="forgotMsg"></p>
+  </div>
+</div>
+
+<header>
+  <h1>Keuangan Rumah Tangga</h1>
+  <p>Kelola rezeki keluarga secara bijak & berkah</p>
+</header>
+
+<main class="container">
+
+  <!-- DASHBOARD -->
+  <section class="dashboard">
+    <div class="card income"><h3>Pemasukan</h3><p id="totalIncome">Rp 0</p></div>
+    <div class="card expense"><h3>Pengeluaran</h3><p id="totalExpense">Rp 0</p></div>
+    <div class="card balance"><h3>Saldo</h3><p id="balance">Rp 0</p></div>
+    <div class="card saving"><h3>Tabungan</h3><p id="saving">Rp 0</p></div>
+  </section>
+
+  <!-- WARNING -->
+  <div id="warningBox" class="warning hidden"></div>
+
+  <!-- ANALISIS -->
+  <section class="analysis-section">
+    <h2>📊 Analisis Keuangan</h2>
+    <div id="analysisResult"></div>
+  </section>
+
+  <!-- ZAKAT -->
+  <section class="analysis-section">
+    <h2>💰 Zakat & Sedekah</h2>
+    <p><strong>Zakat Wajib:</strong> <span id="zakatValue">Rp 0</span></p>
+    <p><strong>Total Sedekah/Infaq:</strong> <span id="sedekahValue">Rp 0</span></p>
+  </section>
+
+  <!-- GANTI PIN -->
+  <section class="analysis-section">
+    <h2>🔐 Ganti PIN</h2>
+    <div class="pin-change-box">
+      <input type="password" id="oldPin" placeholder="PIN Lama">
+      <input type="password" id="newPin" placeholder="PIN Baru (4 digit)">
+      <input type="password" id="confirmPin" placeholder="Konfirmasi PIN Baru">
+      <button onclick="changePIN()">Simpan PIN</button>
+      <p id="pinChangeMsg"></p>
+    </div>
+  </section>
+
+  <!-- FILTER -->
+  <section class="filter-section">
+    <h2>📅 Filter Bulanan</h2>
+    <input type="month" id="monthFilter">
+    <label class="ramadhan-toggle">
+      <input type="checkbox" id="ramadhanMode"> 🌙 Mode Ramadhan
+    </label>
+  </section>
+
+  <!-- FORM -->
+  <section class="form-section">
+    <h2>➕ Tambah Transaksi</h2>
+    <form id="transactionForm">
+      <input type="date" id="date" required>
+
+      <select id="type">
+        <option value="income">Pemasukan</option>
+        <option value="expense">Pengeluaran</option>
+        <option value="sedekah">Sedekah / Infaq</option>
+      </select>
+
+      <select id="category">
+        <option>Makan</option>
+        <option>Transport</option>
+        <option>Listrik</option>
+        <option>Internet</option>
+        <option>Pendidikan</option>
+        <option>Lainnya</option>
+      </select>
+
+      <input type="number" id="amount" placeholder="Nominal" required>
+      <input type="text" id="note" placeholder="Catatan">
+      <button type="submit">Simpan</button>
+    </form>
+  </section>
+
+  <!-- TABLE -->
+  <section>
+    <h2>📋 Riwayat Transaksi</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Tanggal</th>
+          <th>Jenis</th>
+          <th>Kategori</th>
+          <th>Nominal</th>
+          <th>Catatan</th>
+          <th>Aksi</th>
+        </tr>
+      </thead>
+      <tbody id="transactionTable"></tbody>
+    </table>
+  </section>
+
+  <!-- CHART -->
+  <section class="chart-section">
+    <div class="chart-card"><canvas id="barChart"></canvas></div>
+    <div class="chart-card"><canvas id="pieChart"></canvas></div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <p>“Ya Allah, berkahilah rezeki keluarga kami.”</p>
+</footer>
+
+<script src="js/app.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <!-- Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
