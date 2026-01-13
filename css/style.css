@@ -527,6 +527,14 @@ button,
     padding-bottom: 70px;
   }
 }
+body.compact table,
+body.compact .chart-section {
+  display: none;
+}
+
+body.compact .dashboard {
+  grid-template-columns: 1fr;
+}
 
 
 
