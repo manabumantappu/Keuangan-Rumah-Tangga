@@ -85,31 +85,32 @@ body.ramadhan{background:linear-gradient(135deg,#1b5e20,#004d40)}
   color: #2e7d32;
   margin-top: 10px;
 }
+/* ===== FOOTER FINAL ISLAMI ===== */
 .footer {
-  margin-top: 40px;
-  padding: 28px 16px;
+  margin-top: 32px;
+  padding: 28px 16px 22px;
   text-align: center;
 
-  /* gradasi senada dashboard */
-  background: linear-gradient(135deg, #0f766e, #115e59, #134e4a);
+  background: linear-gradient(180deg, #0f766e 0%, #0b5f5a 100%);
+  color: #ecfdf5;
 
-  color: #e6fffa;
-  border-top: 3px solid rgba(255,255,255,0.15);
+  border-top: 2px solid rgba(255,255,255,0.15);
 }
 
-/* kutipan ayat / hadits */
+/* kutipan */
 #quoteText {
   display: block;
-  max-width: 820px;
-  margin: 0 auto 14px;
-  padding: 12px 18px;
+  max-width: 900px;
+  margin: 0 auto 16px;
+  padding: 14px 18px;
 
   font-style: italic;
   font-size: 0.95rem;
   line-height: 1.7;
 
   color: #dcfce7;
-  background: rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.06);
+
   border-left: 4px solid #22c55e;
   border-radius: 10px;
 }
@@ -117,10 +118,11 @@ body.ramadhan{background:linear-gradient(135deg,#1b5e20,#004d40)}
 /* copyright */
 .footer p {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #bbf7d0;
 }
+
 body.ramadhan .footer {
   background: linear-gradient(135deg, #78350f, #92400e);
 }
