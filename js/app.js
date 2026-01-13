@@ -291,6 +291,11 @@ if(themeToggle){
 }
 let editIndex = null;
 
+function editTransaction(index){
+  const list = filtered();
+  if(!list[index]) return;
+
+  const t = list[index];
 
   date.value = t.date;
   user.value = t.user;
@@ -301,6 +306,7 @@ let editIndex = null;
 
   editIndex = transactions.indexOf(t);
 }
+
 function editTransaction(index){
   const list = filtered();
   if(!list[index]) return;
