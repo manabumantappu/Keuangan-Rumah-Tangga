@@ -87,13 +87,55 @@ update();
 function resetData(){
   const yakin = confirm(
     "⚠️ Semua data transaksi akan dihapus.\n" +
-    "Tindakan ini tidak bisa dibatalkan.\n\n" +
+    "Kamu masih bisa UNDO dalam beberapa menit.\n\n" +
     "Lanjutkan?"
   );
 
-  if(yakin){
-    localStorage.removeItem("transactions");
-    location.reload();
-  }
+  if(!yakin) return;
+
+  // simpan backup sementara
+  localStorage.setItem(
+    "transactions_backup",
+    localStorage.getItem("transactions")
+  );
+
+  localStorage.setItem(
+    "transactions_backup_time",
+    Date.now()
+  );
+
+  // hapus data utama
+  localStorage.removeItem("transactions");
+
+  alert("Data di-reset. Kamu bisa UNDO dalam 5 menit.");
+  location.reload();
 }
+function undoReset(){
+  const backup = localStorage.getItem("transactions_backup");
+  const time = localStorage.getItem("transactions_backup_time");
+
+  if(!backup || !time){
+    alert("Tidak ada data untuk di-undo.");
+    return;
+  }
+
+  const batas = 5 * 60 * 1000; // 5 menit
+  if(Date.now() - Number(time) > batas){
+    localStorage.removeItem("transactions_backup");
+    localStorage.removeItem("transactions_backup_time");
+    alert("Waktu undo sudah habis.");
+    return;
+  }
+
+  // restore data
+  localStorage.setItem("transactions", backup);
+
+  // hapus backup
+  localStorage.removeItem("transactions_backup");
+  localStorage.removeItem("transactions_backup_time");
+
+  alert("Data berhasil dikembalikan.");
+  location.reload();
+}
+
 
