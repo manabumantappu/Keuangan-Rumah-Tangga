@@ -51,6 +51,28 @@ function renderDashboard(){
     note.innerText = "✅ Sedekah bulan ini sudah mencukupi";
     note.style.color = "#0f9d58";
   }
+// ===== PERINGATAN SEDEKAH 0 =====
+const sedekahWarningId = "sedekahWarning";
+let sedWarn = document.getElementById(sedekahWarningId);
+
+// buat elemen kalau belum ada
+if(!sedWarn){
+  sedWarn = document.createElement("div");
+  sedWarn.id = sedekahWarningId;
+  sedWarn.className = "warning";
+  sedekahValue.parentElement.appendChild(sedWarn);
+}
+
+if(inc > 0 && sed === 0){
+  sedWarn.classList.remove("hidden");
+  sedWarn.innerHTML = `
+    🕌 <strong>Belum ada sedekah</strong><br>
+    <em>"Harta tidak akan berkurang karena sedekah"</em><br>
+    (HR. Muslim)
+  `;
+} else {
+  sedWarn.classList.add("hidden");
+}
 
   // ===== PERINGATAN BOROS =====
   const limit = isRamadhan ? 0.7 : 0.8;
