@@ -69,4 +69,14 @@ body.ramadhan{background:linear-gradient(135deg,#1b5e20,#004d40)}
 .undo-btn:hover {
   background: #0d47a1;
 }
+.sedekah-rekomendasi {
+  border-left: 6px solid #0f9d58;
+  background: linear-gradient(135deg, #e8f5e9, #ffffff);
+}
+
+.sedekah-rekomendasi small {
+  display: block;
+  margin-top: 6px;
+  color: #555;
+}
 
