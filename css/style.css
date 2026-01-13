@@ -245,5 +245,18 @@ body.dark.ramadhan #quoteText {
   border-left-color: #facc15;
   color: #fef3c7;
 }
+.delete-btn {
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.delete-btn:hover {
+  background: #b91c1c;
+}
 
 
