@@ -1,5 +1,5 @@
 // ===== PIN =====
-const savedPIN = localStorage.getItem("pin") || "1234";
+const savedPIN = localStorage.getItem("pin") || "4215";
 function checkPIN(){
   const input = document.getElementById("pinInput").value;
   if(input === savedPIN){
