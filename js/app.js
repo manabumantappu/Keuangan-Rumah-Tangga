@@ -234,10 +234,6 @@ showQuote();
 // ganti setiap 10 detik
 setInterval(showQuote, 10000);
 
-// tahun otomatis
-const yearEl = document.getElementById("year");
-if(yearEl){
-  yearEl.innerText = new Date().getFullYear();
-}
+
 
 
