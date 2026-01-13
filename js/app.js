@@ -187,5 +187,9 @@ function undoReset(){
   alert("Data berhasil dikembalikan.");
   location.reload();
 }
+const yearEl = document.getElementById("year");
+if(yearEl){
+  yearEl.innerText = new Date().getFullYear();
+}
 
 
