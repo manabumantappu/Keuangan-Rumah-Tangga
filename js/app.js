@@ -7,11 +7,19 @@ let isRamadhan = false;
 function save(){ localStorage.setItem("transactions", JSON.stringify(transactions)); }
 
 function filtered(){
-  return transactions.filter(t=>{
+  const data = transactions.filter(t=>{
     return (!selectedMonth || t.date.startsWith(selectedMonth)) &&
-           (selectedUser==="all" || t.user===selectedUser);
+           (selectedUser === "all" || t.user === selectedUser);
   });
+
+  // 🔐 fallback: jangan pernah tampilkan kosong kalau data ada
+  if(data.length === 0 && transactions.length > 0){
+    return transactions;
+  }
+
+  return data;
 }
+
 
 function renderDashboard(){
   let inc = 0, exp = 0, sed = 0;
