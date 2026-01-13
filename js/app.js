@@ -363,5 +363,11 @@ function importData(event){
 
   reader.readAsText(file);
 }
+const compactToggle = document.getElementById("compactMode");
+if(compactToggle){
+  compactToggle.onchange = () => {
+    document.body.classList.toggle("compact", compactToggle.checked);
+  };
+}
 
 
