@@ -1,8 +1,4 @@
-let transactions = JSON.parse(localStorage.getItem("transactions")) || [
-  {date:"2026-01-02",user:"Ayah",type:"income",category:"Gaji",amount:5000000,note:"Gaji"},
-  {date:"2026-01-05",user:"Ibu",type:"expense",category:"Makan",amount:700000,note:"Belanja"},
-  {date:"2026-01-10",user:"Ayah",type:"sedekah",category:"Infaq",amount:200000,note:"Masjid"}
-];
+let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
 let selectedMonth = "";
 let selectedUser = "all";
