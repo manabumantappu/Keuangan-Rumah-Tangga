@@ -53,6 +53,19 @@
     <p><strong>Total Sedekah/Infaq:</strong> <span id="sedekahValue">Rp 0</span></p>
   </section>
 
+  <!-- GANTI PIN -->
+<section class="analysis-section">
+  <h2>🔐 Ganti PIN Keamanan</h2>
+
+  <div class="pin-change-box">
+    <input type="password" id="oldPin" placeholder="PIN Lama">
+    <input type="password" id="newPin" placeholder="PIN Baru (4 digit)">
+    <input type="password" id="confirmPin" placeholder="Konfirmasi PIN Baru">
+    <button onclick="changePIN()">Simpan PIN Baru</button>
+    <p id="pinChangeMsg"></p>
+  </div>
+</section>
+
   <!-- FILTER -->
   <section class="filter-section">
     <h2>📅 Filter Bulanan</h2>
