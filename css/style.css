@@ -274,5 +274,120 @@ body.dark.ramadhan #quoteText {
   opacity: 1 !important;
   visibility: visible !important;
 }
+/* ===== FOOTER ISLAMI PREMIUM ===== */
+.footer-premium {
+  margin-top: 48px;
+  padding: 36px 20px 28px;
+  background: linear-gradient(
+    180deg,
+    rgba(15, 118, 110, 0.95),
+    rgba(11, 95, 90, 0.98)
+  );
+  color: #ecfdf5;
+}
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Kutipan */
+.footer-quote {
+  max-width: 880px;
+  margin: 0 auto 20px;
+  padding: 16px 22px;
+
+  background: rgba(255,255,255,0.08);
+  border-left: 4px solid #22c55e;
+  border-radius: 14px;
+
+  font-style: italic;
+  line-height: 1.8;
+  color: #dcfce7;
+
+  animation: fadeQuote 0.8s ease-in-out;
+}
+
+.quote-icon {
+  display: block;
+  font-size: 1.3rem;
+  margin-bottom: 6px;
+  color: #a7f3d0;
+}
+
+/* Divider */
+.footer-divider {
+  height: 1px;
+  width: 60%;
+  margin: 20px auto;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255,255,255,0.35),
+    transparent
+  );
+}
+
+/* Bottom */
+.footer-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.footer-brand {
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #bbf7d0;
+}
+
+.footer-copy {
+  color: #d1fae5;
+}
+
+/* ===== RAMADHAN MODE ===== */
+body.ramadhan .footer-premium {
+  background: linear-gradient(180deg, #78350f, #92400e);
+}
+
+body.ramadhan .footer-quote {
+  border-left-color: #facc15;
+  color: #fef3c7;
+}
+
+/* ===== DARK MODE ===== */
+body.dark .footer-premium {
+  background: linear-gradient(180deg, #020617, #022c22);
+}
+
+body.dark .footer-quote {
+  background: rgba(255,255,255,0.06);
+  border-left-color: #22c55e;
+  color: #dcfce7;
+}
+
+body.dark.ramadhan .footer-premium {
+  background: linear-gradient(180deg, #0f172a, #78350f);
+}
+
+/* Animasi */
+@keyframes fadeQuote {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== MOBILE OPTIMIZATION ===== */
+@media (max-width: 640px) {
+  .footer-quote {
+    font-size: 0.9rem;
+    padding: 14px 16px;
+  }
+
+  .footer-divider {
+    width: 80%;
+  }
+}
 
 
