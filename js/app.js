@@ -1,51 +1,75 @@
 // =======================
-// DATA & STORAGE
+// DATA & STATE
 // =======================
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [
-  {date:"2026-01-01", type:"income", category:"Gaji", amount:5000000, note:"Gaji Bulanan"},
-  {date:"2026-01-05", type:"expense", category:"Makan", amount:750000, note:"Belanja"}
-];
-let transactions = JSON.parse(localStorage.getItem("transactions")) || [
-  {date:"2026-01-01", type:"income", category:"Gaji", amount:5000000, note:"Gaji Bulanan"},
-  {date:"2026-01-05", type:"expense", category:"Makan", amount:750000, note:"Belanja"}
+  {date:"2026-01-02", type:"income", category:"Gaji", amount:5000000, note:"Gaji Bulanan"},
+  {date:"2026-01-05", type:"expense", category:"Makan", amount:750000, note:"Belanja Harian"},
+  {date:"2026-01-10", type:"expense", category:"Listrik", amount:350000, note:"PLN"}
 ];
 
-let selectedMonth = ""; // ⬅️ FILTER BULANAN
+let selectedMonth = "";
+
+// =======================
+// STORAGE
+// =======================
 function saveData(){
   localStorage.setItem("transactions", JSON.stringify(transactions));
 }
 
 // =======================
-// RENDER DASHBOARD
+// FILTERED DATA
+// =======================
+function getFilteredTransactions(){
+  if(!selectedMonth) return transactions;
+  return transactions.filter(t => t.date.startsWith(selectedMonth));
+}
+
+// =======================
+// DASHBOARD
 // =======================
 function renderDashboard(){
+  const data = getFilteredTransactions();
   let income = 0, expense = 0;
 
-  transactions.forEach(t=>{
-    if(t.type === "income") income += t.amount;
-    else expense += t.amount;
+  data.forEach(t=>{
+    t.type === "income" ? income += t.amount : expense += t.amount;
   });
 
   document.getElementById("totalIncome").innerText = formatRupiah(income);
   document.getElementById("totalExpense").innerText = formatRupiah(expense);
   document.getElementById("balance").innerText = formatRupiah(income - expense);
   document.getElementById("saving").innerText = formatRupiah((income - expense) * 0.2);
+
+  checkWarning(income, expense);
 }
 
 // =======================
-// TABEL
+// WARNING BOROS
+// =======================
+function checkWarning(income, expense){
+  const box = document.getElementById("warningBox");
+
+  if(income > 0 && expense >= income * 0.8){
+    box.classList.remove("hidden");
+    box.innerHTML = `
+      ⚠️ <strong>Peringatan Boros</strong><br>
+      Pengeluaran mendekati pemasukan.<br>
+      <em>"Sesungguhnya pemboros itu saudara setan"</em><br>
+      (QS. Al-Isra: 27)
+    `;
+  } else {
+    box.classList.add("hidden");
+  }
+}
+
+// =======================
+// TABLE
 // =======================
 function renderTable(){
   const table = document.getElementById("transactionTable");
   table.innerHTML = "";
 
-  let filtered = transactions;
-
-  if(selectedMonth){
-    filtered = transactions.filter(t => t.date.startsWith(selectedMonth));
-  }
-
-  filtered.forEach((t,i)=>{
+  getFilteredTransactions().forEach((t,i)=>{
     table.innerHTML += `
       <tr>
         <td>${t.date}</td>
@@ -59,7 +83,6 @@ function renderTable(){
   });
 }
 
-
 function deleteTransaction(index){
   transactions.splice(index,1);
   saveData();
@@ -69,7 +92,7 @@ function deleteTransaction(index){
 // =======================
 // FORM
 // =======================
-document.getElementById("transactionForm").addEventListener("submit",e=>{
+document.getElementById("transactionForm").addEventListener("submit", e=>{
   e.preventDefault();
 
   transactions.push({
@@ -86,13 +109,31 @@ document.getElementById("transactionForm").addEventListener("submit",e=>{
 });
 
 // =======================
+// FILTER BULAN
+// =======================
+document.getElementById("monthFilter").addEventListener("change", e=>{
+  selectedMonth = e.target.value;
+  updateAll();
+});
+
+// =======================
 // CHART
 // =======================
 let barChart, pieChart;
 
 function renderCharts(){
-  const income = transactions.filter(t=>t.type==="income").reduce((a,b)=>a+b.amount,0);
-  const expense = transactions.filter(t=>t.type==="expense").reduce((a,b)=>a+b.amount,0);
+  const data = getFilteredTransactions();
+
+  let income = 0, expense = 0;
+  const categories = {};
+
+  data.forEach(t=>{
+    if(t.type === "income") income += t.amount;
+    else {
+      expense += t.amount;
+      categories[t.category] = (categories[t.category] || 0) + t.amount;
+    }
+  });
 
   barChart?.destroy();
   pieChart?.destroy();
@@ -102,15 +143,10 @@ function renderCharts(){
     data:{
       labels:["Pemasukan","Pengeluaran"],
       datasets:[{
-        data:[income,expense],
-        backgroundColor:["#00c853","#ff5252"]
+        data:[income, expense],
+        backgroundColor:["#0f9d58","#c62828"]
       }]
     }
-  });
-
-  const categories = {};
-  transactions.filter(t=>t.type==="expense").forEach(t=>{
-    categories[t.category] = (categories[t.category] || 0) + t.amount;
   });
 
   pieChart = new Chart(pieChartCanvas,{
@@ -119,7 +155,7 @@ function renderCharts(){
       labels:Object.keys(categories),
       datasets:[{
         data:Object.values(categories),
-        backgroundColor:["#2979ff","#ff9800","#8e24aa","#00c853","#ff5252"]
+        backgroundColor:["#1565c0","#ff9800","#8e24aa","#0f9d58","#c62828"]
       }]
     }
   });
@@ -138,8 +174,9 @@ function updateAll(){
   renderCharts();
 }
 
+// =======================
 // INIT
+// =======================
 const barChartCanvas = document.getElementById("barChart");
 const pieChartCanvas = document.getElementById("pieChart");
-
 updateAll();
