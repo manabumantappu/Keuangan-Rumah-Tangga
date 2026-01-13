@@ -131,5 +131,19 @@ button.delete {
   border-radius: 10px;
   border: 1px solid #ccc;
 }
+  .warning {
+  margin-top: 15px;
+  padding: 15px;
+  border-radius: 12px;
+  background: #fff3cd;
+  border-left: 6px solid #ff9800;
+  color: #856404;
+  font-weight: 600;
+}
+
+.hidden {
+  display: none;
+}
+
 
 }
