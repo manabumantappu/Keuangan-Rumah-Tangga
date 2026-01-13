@@ -1,129 +1,312 @@
-/* ================= PIN ================= */
+/* =====================================================
+   KONFIGURASI KEAMANAN
+===================================================== */
 const DEFAULT_PIN = "4215";
-const SECURITY_ANSWER = (localStorage.getItem("securityAnswer") || "jain").toLowerCase();
+const DEFAULT_SECURITY_ANSWER = "jain";
 
-function getPIN(){ return localStorage.getItem("pin") || DEFAULT_PIN; }
+/* ================= PIN & SECURITY ================= */
 
-function checkPIN(){
-  if(pinInput.value === getPIN()){
-    pinOverlay.classList.add("hidden");
-    pinMsg.innerText="";
-  } else pinMsg.innerText="❌ PIN salah";
+// ambil PIN (selalu konsisten)
+function getPIN() {
+  return localStorage.getItem("pin") || DEFAULT_PIN;
 }
 
-window.onload=()=>pinOverlay.classList.remove("hidden");
+// ambil jawaban keamanan (anti bug localStorage lama)
+function getSecurityAnswer() {
+  return (localStorage.getItem("securityAnswer") || DEFAULT_SECURITY_ANSWER).toLowerCase();
+}
 
-function showResetPIN(){
-  if(confirm("Reset PIN ke default (4215)?")){
-    localStorage.setItem("pin",DEFAULT_PIN);
+// login PIN
+function checkPIN() {
+  const input = document.getElementById("pinInput").value.trim();
+  const msg = document.getElementById("pinMsg");
+
+  if (input === getPIN()) {
+    document.getElementById("pinOverlay").classList.add("hidden");
+    msg.innerText = "";
+  } else {
+    msg.innerText = "❌ PIN salah";
+  }
+}
+
+// kunci selalu saat reload
+window.onload = () => {
+  document.getElementById("pinOverlay").classList.remove("hidden");
+};
+
+// reset PIN manual
+function showResetPIN() {
+  if (confirm("Reset PIN ke default (4215)?")) {
+    localStorage.setItem("pin", DEFAULT_PIN);
+    alert("PIN berhasil di-reset ke 4215");
     location.reload();
   }
 }
 
-function showForgotPIN(){
-  forgotOverlay.classList.remove("hidden");
+// buka lupa PIN
+function showForgotPIN() {
+  document.getElementById("forgotOverlay").classList.remove("hidden");
 }
 
-function verifySecurity(){
-  if(securityAnswer.value.toLowerCase()===SECURITY_ANSWER){
-    localStorage.setItem("pin",DEFAULT_PIN);
-    forgotMsg.innerText="✅ PIN di-reset ke 4215";
-    setTimeout(()=>location.reload(),1200);
-  } else forgotMsg.innerText="❌ Jawaban salah";
+// verifikasi lupa PIN
+function verifySecurity() {
+  const input = document.getElementById("securityAnswer").value.trim().toLowerCase();
+  const msg = document.getElementById("forgotMsg");
+
+  if (input === getSecurityAnswer()) {
+    localStorage.setItem("pin", DEFAULT_PIN);
+    msg.style.color = "green";
+    msg.innerText = "✅ PIN berhasil di-reset ke 4215";
+
+    setTimeout(() => location.reload(), 1200);
+  } else {
+    msg.style.color = "red";
+    msg.innerText = "❌ Jawaban salah";
+  }
 }
 
-function changePIN(){
-  if(oldPin.value!==getPIN()){pinChangeMsg.innerText="❌ PIN lama salah";return}
-  if(newPin.value.length!==4||isNaN(newPin.value)){pinChangeMsg.innerText="❌ PIN harus 4 digit";return}
-  if(newPin.value!==confirmPin.value){pinChangeMsg.innerText="❌ Konfirmasi salah";return}
-  localStorage.setItem("pin",newPin.value);
-  pinChangeMsg.innerText="✅ PIN diganti";
-  setTimeout(()=>location.reload(),1000);
+// ganti PIN dari UI
+function changePIN() {
+  const oldPin = oldPinInput.value.trim();
+  const newPin = newPinInput.value.trim();
+  const confirmPin = confirmPinInput.value.trim();
+  const msg = document.getElementById("pinChangeMsg");
+
+  if (oldPin !== getPIN()) {
+    msg.innerText = "❌ PIN lama salah";
+    return;
+  }
+
+  if (newPin.length !== 4 || isNaN(newPin)) {
+    msg.innerText = "❌ PIN baru harus 4 digit angka";
+    return;
+  }
+
+  if (newPin !== confirmPin) {
+    msg.innerText = "❌ Konfirmasi PIN tidak cocok";
+    return;
+  }
+
+  localStorage.setItem("pin", newPin);
+  msg.style.color = "green";
+  msg.innerText = "✅ PIN berhasil diganti";
+
+  setTimeout(() => location.reload(), 1000);
 }
 
-/* ================= DATA ================= */
-let transactions=JSON.parse(localStorage.getItem("transactions"))||[
-  {date:"2026-01-02",type:"income",category:"Gaji",amount:5000000,note:"Gaji"},
-  {date:"2026-01-05",type:"expense",category:"Makan",amount:750000,note:"Belanja"},
-  {date:"2026-01-10",type:"sedekah",category:"Infaq",amount:200000,note:"Masjid"}
+/* =====================================================
+   DATA TRANSAKSI
+===================================================== */
+let transactions = JSON.parse(localStorage.getItem("transactions")) || [
+  { date: "2026-01-02", type: "income", category: "Gaji", amount: 5000000, note: "Gaji Bulanan" },
+  { date: "2026-01-05", type: "expense", category: "Makan", amount: 750000, note: "Belanja" },
+  { date: "2026-01-10", type: "sedekah", category: "Infaq", amount: 200000, note: "Masjid" }
 ];
-let selectedMonth="",isRamadhan=false;
 
-function save(){localStorage.setItem("transactions",JSON.stringify(transactions))}
-function filtered(){return selectedMonth?transactions.filter(t=>t.date.startsWith(selectedMonth)):transactions}
+let selectedMonth = "";
+let isRamadhan = false;
 
-/* ================= DASHBOARD ================= */
-function renderDashboard(){
-  let inc=0,exp=0,sed=0;
-  filtered().forEach(t=>{
-    if(t.type==="income")inc+=t.amount;
-    else if(t.type==="expense")exp+=t.amount;
-    else sed+=t.amount;
-  });
-  totalIncome.innerText=rupiah(inc);
-  totalExpense.innerText=rupiah(exp);
-  balance.innerText=rupiah(inc-exp);
-  saving.innerText=rupiah((inc-exp)*0.2);
-  sedekahValue.innerText=rupiah(sed);
-  zakatValue.innerText=rupiah((inc-exp)>=85000000?(inc-exp)*0.025:0);
-  warning(inc,exp);
+function save() {
+  localStorage.setItem("transactions", JSON.stringify(transactions));
 }
 
-/* ================= WARNING ================= */
-function warning(i,e){
-  const limit=isRamadhan?0.7:0.8;
-  if(i>0&&e>=i*limit){
+function filtered() {
+  return selectedMonth
+    ? transactions.filter(t => t.date.startsWith(selectedMonth))
+    : transactions;
+}
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+function renderDashboard() {
+  let income = 0, expense = 0, sedekah = 0;
+
+  filtered().forEach(t => {
+    if (t.type === "income") income += t.amount;
+    else if (t.type === "expense") expense += t.amount;
+    else if (t.type === "sedekah") sedekah += t.amount;
+  });
+
+  totalIncome.innerText = rupiah(income);
+  totalExpense.innerText = rupiah(expense);
+  balance.innerText = rupiah(income - expense);
+  saving.innerText = rupiah((income - expense) * 0.2);
+  sedekahValue.innerText = rupiah(sedekah);
+
+  // zakat 2.5% jika saldo >= nisab (contoh 85jt)
+  zakatValue.innerText = rupiah(
+    (income - expense) >= 85000000 ? (income - expense) * 0.025 : 0
+  );
+
+  renderWarning(income, expense);
+}
+
+/* =====================================================
+   WARNING BOROS
+===================================================== */
+function renderWarning(income, expense) {
+  const limit = isRamadhan ? 0.7 : 0.8;
+
+  if (income > 0 && expense >= income * limit) {
     warningBox.classList.remove("hidden");
-    warningBox.innerHTML="⚠️ Boros! QS Al-Isra:27";
-  } else warningBox.classList.add("hidden");
+    warningBox.innerHTML = `
+      ⚠️ <strong>Peringatan Boros</strong><br>
+      <em>"Sesungguhnya pemboros itu adalah saudara setan"</em><br>
+      (QS. Al-Isra: 27)
+    `;
+  } else {
+    warningBox.classList.add("hidden");
+  }
 }
 
-/* ================= ANALYSIS ================= */
-function renderAnalysis(){
-  const ex=filtered().filter(t=>t.type==="expense");
-  if(!ex.length){analysisResult.innerHTML="<em>Tidak ada data</em>";return}
-  const total=ex.reduce((a,b)=>a+b.amount,0);
-  const cat={}; ex.forEach(t=>cat[t.category]=(cat[t.category]||0)+t.amount);
-  const [c,v]=Object.entries(cat).sort((a,b)=>b[1]-a[1])[0];
-  analysisResult.innerHTML=`<div class="analysis-box">Terbesar: <b>${c}</b> (${Math.round(v/total*100)}%)<br>💡 Kurangi ${c}</div>`;
+/* =====================================================
+   ANALISIS
+===================================================== */
+function renderAnalysis() {
+  const expenses = filtered().filter(t => t.type === "expense");
+
+  if (!expenses.length) {
+    analysisResult.innerHTML = "<em>Tidak ada data pengeluaran.</em>";
+    return;
+  }
+
+  const total = expenses.reduce((a, b) => a + b.amount, 0);
+  const byCategory = {};
+
+  expenses.forEach(t => {
+    byCategory[t.category] = (byCategory[t.category] || 0) + t.amount;
+  });
+
+  const [topCat, topVal] = Object.entries(byCategory)
+    .sort((a, b) => b[1] - a[1])[0];
+
+  analysisResult.innerHTML = `
+    <div class="analysis-box">
+      🔍 Pengeluaran terbesar: <strong>${topCat}</strong><br>
+      Sebesar <strong>${rupiah(topVal)}</strong>
+      (${Math.round(topVal / total * 100)}%)<br><br>
+      💡 <strong>Saran Hemat:</strong><br>
+      Kurangi pengeluaran ${topCat} dengan perencanaan lebih baik.
+    </div>
+  `;
 }
 
-/* ================= TABLE ================= */
-function renderTable(){
-  transactionTable.innerHTML="";
-  filtered().forEach((t,i)=>{
-    transactionTable.innerHTML+=`
-    <tr><td>${t.date}</td><td>${t.type}</td><td>${t.category}</td>
-    <td>${rupiah(t.amount)}</td><td>${t.note}</td>
-    <td><button class="delete" onclick="del(${i})">Hapus</button></td></tr>`;
+/* =====================================================
+   TABLE
+===================================================== */
+function renderTable() {
+  transactionTable.innerHTML = "";
+
+  filtered().forEach((t, i) => {
+    transactionTable.innerHTML += `
+      <tr>
+        <td>${t.date}</td>
+        <td>${t.type}</td>
+        <td>${t.category}</td>
+        <td>${rupiah(t.amount)}</td>
+        <td>${t.note}</td>
+        <td>
+          <button class="delete" onclick="deleteTx(${i})">Hapus</button>
+        </td>
+      </tr>
+    `;
   });
 }
-function del(i){transactions.splice(i,1);save();update()}
 
-/* ================= FORM ================= */
-transactionForm.onsubmit=e=>{
+function deleteTx(i) {
+  transactions.splice(i, 1);
+  save();
+  update();
+}
+
+/* =====================================================
+   FORM
+===================================================== */
+transactionForm.onsubmit = e => {
   e.preventDefault();
-  transactions.push({date:date.value,type:type.value,category:category.value,amount:+amount.value,note:note.value});
-  save();e.target.reset();update();
-}
 
-/* ================= FILTER ================= */
-monthFilter.onchange=e=>{selectedMonth=e.target.value;update()}
-ramadhanMode.onchange=e=>{isRamadhan=e.target.checked;document.body.classList.toggle("ramadhan",isRamadhan);update()}
-
-/* ================= CHART ================= */
-let bar,pie;
-function renderCharts(){
-  let inc=0,exp=0,cat={};
-  filtered().forEach(t=>{
-    if(t.type==="income")inc+=t.amount;
-    if(t.type==="expense"){exp+=t.amount;cat[t.category]=(cat[t.category]||0)+t.amount}
+  transactions.push({
+    date: date.value,
+    type: type.value,
+    category: category.value,
+    amount: Number(amount.value),
+    note: note.value
   });
-  bar?.destroy(); pie?.destroy();
-  bar=new Chart(barChart,{type:"bar",data:{labels:["Masuk","Keluar"],datasets:[{data:[inc,exp]}]}});
-  pie=new Chart(pieChart,{type:"pie",data:{labels:Object.keys(cat),datasets:[{data:Object.values(cat)}]}});
+
+  save();
+  e.target.reset();
+  update();
+};
+
+/* =====================================================
+   FILTER & RAMADHAN
+===================================================== */
+monthFilter.onchange = e => {
+  selectedMonth = e.target.value;
+  update();
+};
+
+ramadhanMode.onchange = e => {
+  isRamadhan = e.target.checked;
+  document.body.classList.toggle("ramadhan", isRamadhan);
+  update();
+};
+
+/* =====================================================
+   CHART
+===================================================== */
+let barChart, pieChart;
+
+function renderCharts() {
+  let income = 0, expense = 0;
+  const categories = {};
+
+  filtered().forEach(t => {
+    if (t.type === "income") income += t.amount;
+    if (t.type === "expense") {
+      expense += t.amount;
+      categories[t.category] = (categories[t.category] || 0) + t.amount;
+    }
+  });
+
+  barChart?.destroy();
+  pieChart?.destroy();
+
+  barChart = new Chart(barChartCanvas, {
+    type: "bar",
+    data: {
+      labels: ["Pemasukan", "Pengeluaran"],
+      datasets: [{
+        data: [income, expense],
+        backgroundColor: ["#0f9d58", "#c62828"]
+      }]
+    }
+  });
+
+  pieChart = new Chart(pieChartCanvas, {
+    type: "pie",
+    data: {
+      labels: Object.keys(categories),
+      datasets: [{
+        data: Object.values(categories)
+      }]
+    }
+  });
 }
 
-function rupiah(n){return"Rp "+n.toLocaleString("id-ID")}
-function update(){renderDashboard();renderAnalysis();renderTable();renderCharts()}
+/* =====================================================
+   UTIL & INIT
+===================================================== */
+function rupiah(n) {
+  return "Rp " + n.toLocaleString("id-ID");
+}
+
+function update() {
+  renderDashboard();
+  renderAnalysis();
+  renderTable();
+  renderCharts();
+}
+
 update();
