@@ -42,3 +42,17 @@ body.ramadhan{background:linear-gradient(135deg,#1b5e20,#004d40)}
 .link-btn{background:none;border:none;color:#1565c0;cursor:pointer;font-weight:600}
 
 .pin-change-box{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.reset-btn {
+  background: #c62828;
+  color: white;
+  font-weight: 700;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.reset-btn:hover {
+  background: #b71c1c;
+}
+
