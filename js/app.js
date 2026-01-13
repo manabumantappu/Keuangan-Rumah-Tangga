@@ -9,6 +9,41 @@ function checkPIN(){
   }
 }
 window.onload = ()=>document.getElementById("pinOverlay").classList.remove("hidden");
+function changePIN(){
+  const oldPin = document.getElementById("oldPin").value;
+  const newPin = document.getElementById("newPin").value;
+  const confirmPin = document.getElementById("confirmPin").value;
+  const msg = document.getElementById("pinChangeMsg");
+
+  const currentPIN = localStorage.getItem("pin") || "1234";
+
+  if(oldPin !== currentPIN){
+    msg.style.color = "red";
+    msg.innerText = "❌ PIN lama salah";
+    return;
+  }
+
+  if(newPin.length !== 4 || isNaN(newPin)){
+    msg.style.color = "red";
+    msg.innerText = "❌ PIN baru harus 4 digit angka";
+    return;
+  }
+
+  if(newPin !== confirmPin){
+    msg.style.color = "red";
+    msg.innerText = "❌ Konfirmasi PIN tidak cocok";
+    return;
+  }
+
+  localStorage.setItem("pin", newPin);
+  msg.style.color = "green";
+  msg.innerText = "✅ PIN berhasil diganti";
+
+  // reset form
+  document.getElementById("oldPin").value = "";
+  document.getElementById("newPin").value = "";
+  document.getElementById("confirmPin").value = "";
+}
 
 // ===== DATA =====
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [
