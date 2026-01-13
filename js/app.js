@@ -1,312 +1,90 @@
-/* =====================================================
-   KONFIGURASI KEAMANAN
-===================================================== */
-const DEFAULT_PIN = "4215";
-const DEFAULT_SECURITY_ANSWER = "jain";
-
-/* ================= PIN & SECURITY ================= */
-
-// ambil PIN (selalu konsisten)
-function getPIN() {
-  return localStorage.getItem("pin") || DEFAULT_PIN;
-}
-
-// ambil jawaban keamanan (anti bug localStorage lama)
-function getSecurityAnswer() {
-  return (localStorage.getItem("securityAnswer") || DEFAULT_SECURITY_ANSWER).toLowerCase();
-}
-
-// login PIN
-function checkPIN() {
-  const input = document.getElementById("pinInput").value.trim();
-  const msg = document.getElementById("pinMsg");
-
-  if (input === getPIN()) {
-    document.getElementById("pinOverlay").classList.add("hidden");
-    msg.innerText = "";
-  } else {
-    msg.innerText = "❌ PIN salah";
-  }
-}
-
-// kunci selalu saat reload
-window.onload = () => {
-  document.getElementById("pinOverlay").classList.remove("hidden");
-};
-
-// reset PIN manual
-function showResetPIN() {
-  if (confirm("Reset PIN ke default (4215)?")) {
-    localStorage.setItem("pin", DEFAULT_PIN);
-    alert("PIN berhasil di-reset ke 4215");
-    location.reload();
-  }
-}
-
-// buka lupa PIN
-function showForgotPIN() {
-  document.getElementById("forgotOverlay").classList.remove("hidden");
-}
-
-// verifikasi lupa PIN
-function verifySecurity() {
-  const input = document.getElementById("securityAnswer").value.trim().toLowerCase();
-  const msg = document.getElementById("forgotMsg");
-
-  if (input === getSecurityAnswer()) {
-    localStorage.setItem("pin", DEFAULT_PIN);
-    msg.style.color = "green";
-    msg.innerText = "✅ PIN berhasil di-reset ke 4215";
-
-    setTimeout(() => location.reload(), 1200);
-  } else {
-    msg.style.color = "red";
-    msg.innerText = "❌ Jawaban salah";
-  }
-}
-
-// ganti PIN dari UI
-function changePIN() {
-  const oldPin = oldPinInput.value.trim();
-  const newPin = newPinInput.value.trim();
-  const confirmPin = confirmPinInput.value.trim();
-  const msg = document.getElementById("pinChangeMsg");
-
-  if (oldPin !== getPIN()) {
-    msg.innerText = "❌ PIN lama salah";
-    return;
-  }
-
-  if (newPin.length !== 4 || isNaN(newPin)) {
-    msg.innerText = "❌ PIN baru harus 4 digit angka";
-    return;
-  }
-
-  if (newPin !== confirmPin) {
-    msg.innerText = "❌ Konfirmasi PIN tidak cocok";
-    return;
-  }
-
-  localStorage.setItem("pin", newPin);
-  msg.style.color = "green";
-  msg.innerText = "✅ PIN berhasil diganti";
-
-  setTimeout(() => location.reload(), 1000);
-}
-
-/* =====================================================
-   DATA TRANSAKSI
-===================================================== */
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [
-  { date: "2026-01-02", type: "income", category: "Gaji", amount: 5000000, note: "Gaji Bulanan" },
-  { date: "2026-01-05", type: "expense", category: "Makan", amount: 750000, note: "Belanja" },
-  { date: "2026-01-10", type: "sedekah", category: "Infaq", amount: 200000, note: "Masjid" }
+  {date:"2026-01-02",user:"Ayah",type:"income",category:"Gaji",amount:5000000,note:"Gaji"},
+  {date:"2026-01-05",user:"Ibu",type:"expense",category:"Makan",amount:700000,note:"Belanja"},
+  {date:"2026-01-10",user:"Ayah",type:"sedekah",category:"Infaq",amount:200000,note:"Masjid"}
 ];
 
 let selectedMonth = "";
+let selectedUser = "all";
 let isRamadhan = false;
 
-function save() {
-  localStorage.setItem("transactions", JSON.stringify(transactions));
+function save(){ localStorage.setItem("transactions", JSON.stringify(transactions)); }
+
+function filtered(){
+  return transactions.filter(t=>{
+    return (!selectedMonth || t.date.startsWith(selectedMonth)) &&
+           (selectedUser==="all" || t.user===selectedUser);
+  });
 }
 
-function filtered() {
-  return selectedMonth
-    ? transactions.filter(t => t.date.startsWith(selectedMonth))
-    : transactions;
-}
-
-/* =====================================================
-   DASHBOARD
-===================================================== */
-function renderDashboard() {
-  let income = 0, expense = 0, sedekah = 0;
-
-  filtered().forEach(t => {
-    if (t.type === "income") income += t.amount;
-    else if (t.type === "expense") expense += t.amount;
-    else if (t.type === "sedekah") sedekah += t.amount;
+function renderDashboard(){
+  let inc=0, exp=0, sed=0;
+  filtered().forEach(t=>{
+    if(t.type==="income") inc+=t.amount;
+    else if(t.type==="expense") exp+=t.amount;
+    else sed+=t.amount;
   });
 
-  totalIncome.innerText = rupiah(income);
-  totalExpense.innerText = rupiah(expense);
-  balance.innerText = rupiah(income - expense);
-  saving.innerText = rupiah((income - expense) * 0.2);
-  sedekahValue.innerText = rupiah(sedekah);
+  totalIncome.innerText = rupiah(inc);
+  totalExpense.innerText = rupiah(exp);
+  balance.innerText = rupiah(inc-exp);
+  saving.innerText = rupiah((inc-exp)*0.2);
+  sedekahValue.innerText = rupiah(sed);
+  zakatValue.innerText = rupiah((inc-exp)>=85000000?(inc-exp)*0.025:0);
 
-  // zakat 2.5% jika saldo >= nisab (contoh 85jt)
-  zakatValue.innerText = rupiah(
-    (income - expense) >= 85000000 ? (income - expense) * 0.025 : 0
-  );
-
-  renderWarning(income, expense);
-}
-
-/* =====================================================
-   WARNING BOROS
-===================================================== */
-function renderWarning(income, expense) {
-  const limit = isRamadhan ? 0.7 : 0.8;
-
-  if (income > 0 && expense >= income * limit) {
+  const limit=isRamadhan?0.7:0.8;
+  if(exp>=inc*limit){
     warningBox.classList.remove("hidden");
-    warningBox.innerHTML = `
-      ⚠️ <strong>Peringatan Boros</strong><br>
-      <em>"Sesungguhnya pemboros itu adalah saudara setan"</em><br>
-      (QS. Al-Isra: 27)
-    `;
-  } else {
-    warningBox.classList.add("hidden");
-  }
+    warningBox.innerText="⚠️ Pengeluaran mendekati/melewati pemasukan";
+  } else warningBox.classList.add("hidden");
 }
 
-/* =====================================================
-   ANALISIS
-===================================================== */
-function renderAnalysis() {
-  const expenses = filtered().filter(t => t.type === "expense");
-
-  if (!expenses.length) {
-    analysisResult.innerHTML = "<em>Tidak ada data pengeluaran.</em>";
-    return;
-  }
-
-  const total = expenses.reduce((a, b) => a + b.amount, 0);
-  const byCategory = {};
-
-  expenses.forEach(t => {
-    byCategory[t.category] = (byCategory[t.category] || 0) + t.amount;
-  });
-
-  const [topCat, topVal] = Object.entries(byCategory)
-    .sort((a, b) => b[1] - a[1])[0];
-
-  analysisResult.innerHTML = `
-    <div class="analysis-box">
-      🔍 Pengeluaran terbesar: <strong>${topCat}</strong><br>
-      Sebesar <strong>${rupiah(topVal)}</strong>
-      (${Math.round(topVal / total * 100)}%)<br><br>
-      💡 <strong>Saran Hemat:</strong><br>
-      Kurangi pengeluaran ${topCat} dengan perencanaan lebih baik.
-    </div>
-  `;
+function renderAnalysis(){
+  const exp=filtered().filter(t=>t.type==="expense");
+  if(!exp.length){analysisResult.innerHTML="Tidak ada data";return}
+  const total=exp.reduce((a,b)=>a+b.amount,0);
+  const cat={};
+  exp.forEach(t=>cat[t.category]=(cat[t.category]||0)+t.amount);
+  const [c,v]=Object.entries(cat).sort((a,b)=>b[1]-a[1])[0];
+  analysisResult.innerHTML=`Terbesar: <b>${c}</b> (${Math.round(v/total*100)}%)<br>💡 Kurangi ${c}`;
 }
 
-/* =====================================================
-   TABLE
-===================================================== */
-function renderTable() {
-  transactionTable.innerHTML = "";
-
-  filtered().forEach((t, i) => {
-    transactionTable.innerHTML += `
+function renderTable(){
+  transactionTable.innerHTML="";
+  filtered().forEach(t=>{
+    transactionTable.innerHTML+=`
       <tr>
-        <td>${t.date}</td>
-        <td>${t.type}</td>
-        <td>${t.category}</td>
-        <td>${rupiah(t.amount)}</td>
-        <td>${t.note}</td>
-        <td>
-          <button class="delete" onclick="deleteTx(${i})">Hapus</button>
-        </td>
-      </tr>
-    `;
+        <td>${t.date}</td><td>${t.user}</td><td>${t.type}</td>
+        <td>${t.category}</td><td>${rupiah(t.amount)}</td><td>${t.note}</td>
+      </tr>`;
   });
 }
 
-function deleteTx(i) {
-  transactions.splice(i, 1);
-  save();
-  update();
+let bar,pie;
+function renderCharts(){
+  let inc=0, exp=0, cat={};
+  filtered().forEach(t=>{
+    if(t.type==="income") inc+=t.amount;
+    if(t.type==="expense"){exp+=t.amount;cat[t.category]=(cat[t.category]||0)+t.amount}
+  });
+  bar?.destroy(); pie?.destroy();
+  bar=new Chart(barChart,{type:"bar",data:{labels:["Masuk","Keluar"],datasets:[{data:[inc,exp]}]}});
+  pie=new Chart(pieChart,{type:"pie",data:{labels:Object.keys(cat),datasets:[{data:Object.values(cat)}]}});
 }
 
-/* =====================================================
-   FORM
-===================================================== */
-transactionForm.onsubmit = e => {
+transactionForm.onsubmit=e=>{
   e.preventDefault();
-
   transactions.push({
-    date: date.value,
-    type: type.value,
-    category: category.value,
-    amount: Number(amount.value),
-    note: note.value
+    date:date.value,user:user.value,type:type.value,
+    category:category.value,amount:+amount.value,note:note.value
   });
-
-  save();
-  e.target.reset();
-  update();
+  save();e.target.reset();update();
 };
 
-/* =====================================================
-   FILTER & RAMADHAN
-===================================================== */
-monthFilter.onchange = e => {
-  selectedMonth = e.target.value;
-  update();
-};
+monthFilter.onchange=e=>{selectedMonth=e.target.value;update();}
+userFilter.onchange=e=>{selectedUser=e.target.value;update();}
+ramadhanMode.onchange=e=>{isRamadhan=e.target.checked;document.body.classList.toggle("ramadhan",isRamadhan);update();}
 
-ramadhanMode.onchange = e => {
-  isRamadhan = e.target.checked;
-  document.body.classList.toggle("ramadhan", isRamadhan);
-  update();
-};
-
-/* =====================================================
-   CHART
-===================================================== */
-let barChart, pieChart;
-
-function renderCharts() {
-  let income = 0, expense = 0;
-  const categories = {};
-
-  filtered().forEach(t => {
-    if (t.type === "income") income += t.amount;
-    if (t.type === "expense") {
-      expense += t.amount;
-      categories[t.category] = (categories[t.category] || 0) + t.amount;
-    }
-  });
-
-  barChart?.destroy();
-  pieChart?.destroy();
-
-  barChart = new Chart(barChartCanvas, {
-    type: "bar",
-    data: {
-      labels: ["Pemasukan", "Pengeluaran"],
-      datasets: [{
-        data: [income, expense],
-        backgroundColor: ["#0f9d58", "#c62828"]
-      }]
-    }
-  });
-
-  pieChart = new Chart(pieChartCanvas, {
-    type: "pie",
-    data: {
-      labels: Object.keys(categories),
-      datasets: [{
-        data: Object.values(categories)
-      }]
-    }
-  });
-}
-
-/* =====================================================
-   UTIL & INIT
-===================================================== */
-function rupiah(n) {
-  return "Rp " + n.toLocaleString("id-ID");
-}
-
-function update() {
-  renderDashboard();
-  renderAnalysis();
-  renderTable();
-  renderCharts();
-}
-
+function rupiah(n){return"Rp "+n.toLocaleString("id-ID")}
+function update(){renderDashboard();renderAnalysis();renderTable();renderCharts()}
 update();
