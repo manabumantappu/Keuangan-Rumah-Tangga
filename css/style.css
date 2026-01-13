@@ -55,4 +55,18 @@ body.ramadhan{background:linear-gradient(135deg,#1b5e20,#004d40)}
 .reset-btn:hover {
   background: #b71c1c;
 }
+.undo-btn {
+  background: #1565c0;
+  color: white;
+  font-weight: 700;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.undo-btn:hover {
+  background: #0d47a1;
+}
 
