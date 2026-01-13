@@ -233,6 +233,10 @@ if(yearEl){
   yearEl.innerText = new Date().getFullYear();
 }
 
+// ===== THEME TOGGLE =====
+const themeToggle = document.getElementById("themeToggle");
+const savedTheme = localStorage.getItem("theme");
+
 // load tema tersimpan
 if(savedTheme === "dark"){
   document.body.classList.add("dark");
