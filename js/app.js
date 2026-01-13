@@ -233,6 +233,28 @@ showQuote();
 
 // ganti setiap 10 detik
 setInterval(showQuote, 10000);
+// ===== THEME TOGGLE (LIGHT / DARK ISLAMI) =====
+const themeToggle = document.getElementById("themeToggle");
+const savedTheme = localStorage.getItem("theme");
+
+// load tema tersimpan
+if(savedTheme === "dark"){
+  document.body.classList.add("dark");
+  if(themeToggle) themeToggle.checked = true;
+}
+
+// toggle event
+if(themeToggle){
+  themeToggle.addEventListener("change", () => {
+    if(themeToggle.checked){
+      document.body.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  });
+}
 
 
 
