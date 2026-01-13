@@ -116,9 +116,8 @@ function renderTable(){
         <td>${rupiah(t.amount)}</td>
         <td>${t.note}</td>
         <td>
-          <button class="delete-btn" onclick="deleteTransaction(${i})">
-            🗑️ Hapus
-          </button>
+<button class="edit-btn" onclick="editTransaction(${i})">✏️ Edit</button>
+<button class="delete-btn" onclick="deleteTransaction(${i})">🗑️ Hapus</button>
         </td>
       </tr>
     `;
