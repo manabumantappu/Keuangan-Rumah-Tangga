@@ -385,6 +385,102 @@ body.ramadhan #quoteText {
 .import-btn:hover {
   background: #1d4ed8;
 }
+/* ======================
+   MOBILE FRIENDLY (HP)
+====================== */
+@media (max-width: 768px){
+
+  body {
+    font-size: 14px;
+  }
+
+  header {
+    padding: 18px 12px;
+  }
+
+  header h1 {
+    font-size: 1.2rem;
+  }
+
+  .container {
+    padding: 12px;
+  }
+
+  /* Dashboard jadi vertikal */
+  .dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: 14px;
+  }
+
+  .card p {
+    font-size: 18px;
+  }
+
+  /* Form 1 kolom */
+  form {
+    grid-template-columns: 1fr;
+  }
+
+  input, select, button {
+    font-size: 15px;
+    padding: 12px;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  /* Filter bar */
+  .filter-row {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Table scroll horizontal */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  th, td {
+    font-size: 13px;
+    padding: 8px;
+  }
+
+  /* Chart full width */
+  .chart-section {
+    grid-template-columns: 1fr;
+  }
+
+  canvas {
+    max-width: 100%;
+  }
+
+  /* Footer */
+  .footer-premium {
+    padding: 16px 12px;
+  }
+
+  #quoteText {
+    font-size: 0.85rem;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 6px;
+    font-size: 0.8rem;
+  }
+button,
+.edit-btn,
+.delete-btn {
+  min-height: 44px; /* standar Google */
+}
+
 
 
 
