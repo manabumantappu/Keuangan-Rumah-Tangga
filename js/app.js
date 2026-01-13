@@ -319,6 +319,8 @@ function editTransaction(index){
   editIndex = transactions.indexOf(t);
 }
 
+document.getElementById("emptyState").style.display =
+  filtered().length ? "none" : "block";
 
 
 
