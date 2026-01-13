@@ -56,14 +56,27 @@
     <p><strong>Sedekah/Infaq:</strong> <span id="sedekahValue">Rp 0</span></p>
   </section>
 
-  <!-- FILTER -->
-  <section class="filter-section">
-    <h2>📅 Filter</h2>
+  <!-- FILTER & THEME -->
+<section class="filter-section">
+  <h2>📅 Filter & Tampilan</h2>
+
+  <div class="filter-row">
     <input type="month" id="monthFilter">
-    <label>
+
+    <label class="ramadhan-toggle">
       <input type="checkbox" id="ramadhanMode"> 🌙 Mode Ramadhan
     </label>
-  </section>
+
+    <div class="theme-toggle">
+      <label class="switch">
+        <input type="checkbox" id="themeToggle">
+        <span class="slider"></span>
+      </label>
+      <span class="theme-label">Dark Mode</span>
+    </div>
+  </div>
+</section>
+
 
   <!-- RESET DATA -->
 <section class="analysis-section">
