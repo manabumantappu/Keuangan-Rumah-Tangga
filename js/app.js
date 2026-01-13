@@ -191,5 +191,34 @@ const yearEl = document.getElementById("year");
 if(yearEl){
   yearEl.innerText = new Date().getFullYear();
 }
+// ===== FOOTER AYAT / HADITS BERGANTIAN =====
+const quotes = [
+  '“Sesungguhnya pemboros itu adalah saudara setan.” (QS. Al-Isra: 27)',
+  '“Harta tidak akan berkurang karena sedekah.” (HR. Muslim)',
+  '“Jika kamu bersyukur, niscaya Aku akan menambah (nikmat) kepadamu.” (QS. Ibrahim: 7)',
+  '“Sebaik-baik harta adalah yang berada di tangan orang saleh.” (HR. Ahmad)',
+  '“Dan apa saja yang kamu infakkan, Allah akan menggantinya.” (QS. Saba: 39)'
+];
+
+const quoteEl = document.getElementById("quoteText");
+let quoteIndex = 0;
+
+function showQuote(){
+  if(!quoteEl) return;
+  quoteEl.innerText = quotes[quoteIndex];
+  quoteIndex = (quoteIndex + 1) % quotes.length;
+}
+
+// tampilkan pertama kali
+showQuote();
+
+// ganti setiap 10 detik
+setInterval(showQuote, 10000);
+
+// tahun otomatis
+const yearEl = document.getElementById("year");
+if(yearEl){
+  yearEl.innerText = new Date().getFullYear();
+}
 
 
