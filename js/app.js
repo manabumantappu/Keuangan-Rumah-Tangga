@@ -291,8 +291,6 @@ if(themeToggle){
 }
 let editIndex = null;
 
-function editTransaction(index){
-  const t = filtered()[index];
 
   date.value = t.date;
   user.value = t.user;
@@ -319,8 +317,10 @@ function editTransaction(index){
   editIndex = transactions.indexOf(t);
 }
 
-document.getElementById("emptyState").style.display =
-  filtered().length ? "none" : "block";
+const emptyEl = document.getElementById("emptyState");
+if(emptyEl){
+  emptyEl.style.display = filtered().length ? "none" : "block";
+}
 
 
 
