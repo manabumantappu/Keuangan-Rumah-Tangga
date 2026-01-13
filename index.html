@@ -167,6 +167,19 @@
   
 <script src="js/app.js"></script> <!-- AWAS TERHAPUS PENTING UNTU PANGGIL DATA -->
 
+<!-- Floating Button “+ Transaksi” (WAJIB)(HP Only) -->
+<button class="fab" onclick="document.getElementById('transactionForm').scrollIntoView({behavior:'smooth'})">
+  ＋
+</button>
+
+  <!-- Bottom Navigation (HP Only) -->
+ <nav class="bottom-nav">
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})">🏠</button>
+  <button onclick="document.querySelector('.analysis-section').scrollIntoView({behavior:'smooth'})">📊</button>
+  <button onclick="document.querySelector('.form-section').scrollIntoView({behavior:'smooth'})">➕</button>
+  <button onclick="document.querySelector('table').scrollIntoView({behavior:'smooth'})">📋</button>
+</nav>
+ 
   <footer class="footer-premium">
   <div class="footer-bar">
 
