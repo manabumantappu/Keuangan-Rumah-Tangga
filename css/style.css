@@ -258,5 +258,18 @@ body.dark.ramadhan #quoteText {
 .delete-btn:hover {
   background: #b91c1c;
 }
+.edit-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  margin-right: 6px;
+}
+.edit-btn:hover {
+  background: #1d4ed8;
+}
 
 
