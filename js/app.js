@@ -5,7 +5,12 @@ let transactions = JSON.parse(localStorage.getItem("transactions")) || [
   {date:"2026-01-01", type:"income", category:"Gaji", amount:5000000, note:"Gaji Bulanan"},
   {date:"2026-01-05", type:"expense", category:"Makan", amount:750000, note:"Belanja"}
 ];
+let transactions = JSON.parse(localStorage.getItem("transactions")) || [
+  {date:"2026-01-01", type:"income", category:"Gaji", amount:5000000, note:"Gaji Bulanan"},
+  {date:"2026-01-05", type:"expense", category:"Makan", amount:750000, note:"Belanja"}
+];
 
+let selectedMonth = ""; // ⬅️ FILTER BULANAN
 function saveData(){
   localStorage.setItem("transactions", JSON.stringify(transactions));
 }
@@ -34,7 +39,13 @@ function renderTable(){
   const table = document.getElementById("transactionTable");
   table.innerHTML = "";
 
-  transactions.forEach((t,i)=>{
+  let filtered = transactions;
+
+  if(selectedMonth){
+    filtered = transactions.filter(t => t.date.startsWith(selectedMonth));
+  }
+
+  filtered.forEach((t,i)=>{
     table.innerHTML += `
       <tr>
         <td>${t.date}</td>
@@ -47,6 +58,7 @@ function renderTable(){
     `;
   });
 }
+
 
 function deleteTransaction(index){
   transactions.splice(index,1);
