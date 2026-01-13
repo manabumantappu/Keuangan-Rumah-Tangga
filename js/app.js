@@ -104,14 +104,33 @@ function renderAnalysis(){
 }
 
 function renderTable(){
-  transactionTable.innerHTML="";
-  filtered().forEach(t=>{
-    transactionTable.innerHTML+=`
+  transactionTable.innerHTML = "";
+
+  filtered().forEach((t, i)=>{
+    transactionTable.innerHTML += `
       <tr>
-        <td>${t.date}</td><td>${t.user}</td><td>${t.type}</td>
-        <td>${t.category}</td><td>${rupiah(t.amount)}</td><td>${t.note}</td>
-      </tr>`;
+        <td>${t.date}</td>
+        <td>${t.user}</td>
+        <td>${t.type}</td>
+        <td>${t.category}</td>
+        <td>${rupiah(t.amount)}</td>
+        <td>${t.note}</td>
+        <td>
+          <button class="delete-btn" onclick="deleteTransaction(${i})">
+            🗑️ Hapus
+          </button>
+        </td>
+      </tr>
+    `;
   });
+}
+function deleteTransaction(index){
+  const yakin = confirm("Yakin ingin menghapus transaksi ini?");
+  if(!yakin) return;
+
+  transactions.splice(index, 1);
+  save();
+  update();
 }
 
 let bar,pie;
