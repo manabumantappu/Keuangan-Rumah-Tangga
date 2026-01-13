@@ -144,14 +144,30 @@ function renderCharts(){
   pie=new Chart(pieChart,{type:"pie",data:{labels:Object.keys(cat),datasets:[{data:Object.values(cat)}]}});
 }
 
-transactionForm.onsubmit=e=>{
+transactionForm.onsubmit = e => {
   e.preventDefault();
-  transactions.push({
-    date:date.value,user:user.value,type:type.value,
-    category:category.value,amount:+amount.value,note:note.value
-  });
-  save();e.target.reset();update();
+
+  const data = {
+    date: date.value,
+    user: user.value,
+    type: type.value,
+    category: category.value,
+    amount: +amount.value,
+    note: note.value
+  };
+
+  if(editIndex !== null){
+    transactions[editIndex] = data;
+    editIndex = null;
+  } else {
+    transactions.push(data);
+  }
+
+  save();
+  e.target.reset();
+  update();
 };
+
 
 monthFilter.onchange=e=>{selectedMonth=e.target.value;update();}
 userFilter.onchange=e=>{selectedUser=e.target.value;update();}
@@ -272,6 +288,35 @@ if(themeToggle){
       localStorage.setItem("theme", "light");
     }
   });
+}
+let editIndex = null;
+
+function editTransaction(index){
+  const t = filtered()[index];
+
+  date.value = t.date;
+  user.value = t.user;
+  type.value = t.type;
+  category.value = t.category;
+  amount.value = t.amount;
+  note.value = t.note;
+
+  editIndex = transactions.indexOf(t);
+}
+function editTransaction(index){
+  const list = filtered();
+  if(!list[index]) return;
+
+  const t = list[index];
+
+  date.value = t.date;
+  user.value = t.user;
+  type.value = t.type;
+  category.value = t.category;
+  amount.value = t.amount;
+  note.value = t.note;
+
+  editIndex = transactions.indexOf(t);
 }
 
 
