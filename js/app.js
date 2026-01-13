@@ -309,6 +309,59 @@ document.addEventListener("DOMContentLoaded", () => {
     quoteEl.innerText = quotes[i];
   }, 10000);
 });
+// ===== EXPORT DATA =====
+function exportData(){
+  const data = {
+    transactions: transactions,
+    exportedAt: new Date().toISOString()
+  };
 
+  const blob = new Blob(
+    [JSON.stringify(data, null, 2)],
+    { type: "application/json" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "keuangan-rumah-tangga.json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+}
+// ===== IMPORT DATA =====
+function importData(event){
+  const file = event.target.files[0];
+  if(!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = e => {
+    try {
+      const json = JSON.parse(e.target.result);
+
+      if(!Array.isArray(json.transactions)){
+        alert("❌ File tidak valid");
+        return;
+      }
+
+      const yakin = confirm(
+        "⚠️ Import data akan MENIMPA data saat ini.\n\nLanjutkan?"
+      );
+      if(!yakin) return;
+
+      transactions = json.transactions;
+      localStorage.setItem("transactions", JSON.stringify(transactions));
+
+      alert("✅ Data berhasil di-import");
+      location.reload();
+
+    } catch(err){
+      alert("❌ Gagal membaca file");
+    }
+  };
+
+  reader.readAsText(file);
+}
 
 
