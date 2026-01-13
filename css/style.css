@@ -357,6 +357,34 @@ body.ramadhan .footer-bar {
 body.ramadhan #quoteText {
   color: #fef3c7;
 }
+.export-btn {
+  background: #0f766e;
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.export-btn:hover {
+  background: #115e59;
+}
+
+.import-btn {
+  display: inline-block;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.import-btn:hover {
+  background: #1d4ed8;
+}
 
 
 
