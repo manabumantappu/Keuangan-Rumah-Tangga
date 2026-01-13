@@ -84,3 +84,16 @@ ramadhanMode.onchange=e=>{isRamadhan=e.target.checked;document.body.classList.to
 function rupiah(n){return"Rp "+n.toLocaleString("id-ID")}
 function update(){renderDashboard();renderAnalysis();renderTable();renderCharts()}
 update();
+function resetData(){
+  const yakin = confirm(
+    "⚠️ Semua data transaksi akan dihapus.\n" +
+    "Tindakan ini tidak bisa dibatalkan.\n\n" +
+    "Lanjutkan?"
+  );
+
+  if(yakin){
+    localStorage.removeItem("transactions");
+    location.reload();
+  }
+}
+
