@@ -115,6 +115,11 @@ function renderTable(){
     `;
   });
 }
+const emptyEl = document.getElementById("emptyState");
+if(emptyEl){
+  emptyEl.style.display = filtered().length ? "none" : "block";
+}
+
 function deleteTransaction(index){
   const list = filtered();
   if(!list[index]) return;
@@ -375,6 +380,30 @@ transactionForm.onsubmit = e => {
 
   // existing logic ...
 
+ transactionForm.onsubmit = e => {
+  e.preventDefault();
+
+  const data = {
+    date: date.value,
+    user: user.value,
+    type: type.value,
+    category: category.value,
+    amount: Number(amount.value),
+    note: note.value
+  };
+
+  if(editIndex !== null){
+    transactions[editIndex] = data;
+    editIndex = null;
+  } else {
+    transactions.push(data);
+  }
+
+  save();
+  update();
+  e.target.reset();
+
+  // feedback visual
   const btn = transactionForm.querySelector("button");
   btn.innerText = "✔️ Tersimpan";
   setTimeout(()=>btn.innerText="Simpan",1000);
