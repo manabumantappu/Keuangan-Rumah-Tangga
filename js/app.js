@@ -108,17 +108,20 @@ function renderTable(){
         <td>${rupiah(t.amount)}</td>
         <td>${t.note}</td>
         <td>
-<button class="edit-btn" onclick="editTransaction(${i})">✏️ Edit</button>
-<button class="delete-btn" onclick="deleteTransaction(${i})">🗑️ Hapus</button>
+          <button class="edit-btn" onclick="editTransaction(${i})">✏️ Edit</button>
+          <button class="delete-btn" onclick="deleteTransaction(${i})">🗑️ Hapus</button>
         </td>
       </tr>
     `;
   });
+
+  const emptyEl = document.getElementById("emptyState");
+  if(emptyEl){
+    emptyEl.style.display = filtered().length ? "none" : "block";
+  }
 }
-const emptyEl = document.getElementById("emptyState");
-if(emptyEl){
-  emptyEl.style.display = filtered().length ? "none" : "block";
-}
+
+
 
 function deleteTransaction(index){
   const list = filtered();
@@ -278,10 +281,7 @@ function editTransaction(index){
   editIndex = transactions.indexOf(t);
 }
 
-const emptyEl = document.getElementById("emptyState");
-if(emptyEl){
-  emptyEl.style.display = filtered().length ? "none" : "block";
-}
+
 // ===== FOOTER AYAT / HADITS BERGANTIAN =====
 document.addEventListener("DOMContentLoaded", () => {
   const quoteEl = document.getElementById("quoteText");
@@ -374,39 +374,6 @@ if(compactToggle){
     document.body.classList.toggle("compact", compactToggle.checked);
   };
 }
-// ===== Feedback Visual Saat Simpan =====
-transactionForm.onsubmit = e => {
-  e.preventDefault();
 
-  // existing logic ...
-
- transactionForm.onsubmit = e => {
-  e.preventDefault();
-
-  const data = {
-    date: date.value,
-    user: user.value,
-    type: type.value,
-    category: category.value,
-    amount: Number(amount.value),
-    note: note.value
-  };
-
-  if(editIndex !== null){
-    transactions[editIndex] = data;
-    editIndex = null;
-  } else {
-    transactions.push(data);
-  }
-
-  save();
-  update();
-  e.target.reset();
-
-  // feedback visual
-  const btn = transactionForm.querySelector("button");
-  btn.innerText = "✔️ Tersimpan";
-  setTimeout(()=>btn.innerText="Simpan",1000);
-};
 
 
