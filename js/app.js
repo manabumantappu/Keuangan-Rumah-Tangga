@@ -1,3 +1,4 @@
+document.addEventListener("DOMContentLoaded", () => {
 // ===== AMBIL ELEMEN DOM (WAJIB) =====
 const transactionTable = document.getElementById("transactionTable");
 const transactionForm  = document.getElementById("transactionForm");
@@ -403,5 +404,5 @@ if(compactToggle){
   };
 }
 
-
+});
 
