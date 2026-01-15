@@ -1,3 +1,31 @@
+// ===== AMBIL ELEMEN DOM (WAJIB) =====
+const transactionTable = document.getElementById("transactionTable");
+const transactionForm  = document.getElementById("transactionForm");
+
+const totalIncome   = document.getElementById("totalIncome");
+const totalExpense  = document.getElementById("totalExpense");
+const balance       = document.getElementById("balance");
+const saving        = document.getElementById("saving");
+const sedekahValue  = document.getElementById("sedekahValue");
+const zakatValue    = document.getElementById("zakatValue");
+const warningBox    = document.getElementById("warningBox");
+const analysisResult= document.getElementById("analysisResult");
+
+const monthFilter   = document.getElementById("monthFilter");
+const userFilter    = document.getElementById("userFilter");
+const ramadhanMode  = document.getElementById("ramadhanMode");
+
+const barChart      = document.getElementById("barChart");
+const pieChart      = document.getElementById("pieChart");
+
+// input form
+const date     = document.getElementById("date");
+const user     = document.getElementById("user");
+const type     = document.getElementById("type");
+const category = document.getElementById("category");
+const amount   = document.getElementById("amount");
+const note     = document.getElementById("note");
+
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 
 let selectedMonth = "";
