@@ -315,7 +315,6 @@ function editTransaction(index){
 
 
 // ===== FOOTER AYAT / HADITS BERGANTIAN =====
-document.addEventListener("DOMContentLoaded", () => {
   const quoteEl = document.getElementById("quoteText");
   if(!quoteEl) return;
 
