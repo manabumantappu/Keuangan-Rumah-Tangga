@@ -241,15 +241,13 @@ function resetData(){
 function undoReset(){
   const backup = localStorage.getItem("transactions_backup");
   const time = localStorage.getItem("transactions_backup_time");
-
+  
   if(!backup || !time){
     alert("Tidak ada data untuk di-undo.");
     return;
   }
-window.resetData = resetData;
-window.undoReset = undoReset;
   
-  const batas = 5 * 60 * 1000; // 5 menit
+   const batas = 5 * 60 * 1000; // 5 menit
   if(Date.now() - Number(time) > batas){
     localStorage.removeItem("transactions_backup");
     localStorage.removeItem("transactions_backup_time");
@@ -263,10 +261,13 @@ window.undoReset = undoReset;
   // hapus backup
   localStorage.removeItem("transactions_backup");
   localStorage.removeItem("transactions_backup_time");
-
   alert("Data berhasil dikembalikan.");
   location.reload();
-}
+  }
+  
+window.resetData = resetData;
+window.undoReset = undoReset;
+  
 const yearEl = document.getElementById("year");
 if(yearEl){
   yearEl.innerText = new Date().getFullYear();
