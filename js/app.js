@@ -246,7 +246,9 @@ function undoReset(){
     alert("Tidak ada data untuk di-undo.");
     return;
   }
-
+window.resetData = resetData;
+window.undoReset = undoReset;
+  
   const batas = 5 * 60 * 1000; // 5 menit
   if(Date.now() - Number(time) > batas){
     localStorage.removeItem("transactions_backup");
