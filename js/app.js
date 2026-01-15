@@ -312,7 +312,8 @@ function editTransaction(index){
 
   editIndex = transactions.indexOf(t);
 }
-
+window.editTransaction = editTransaction;
+window.deleteTransaction = deleteTransaction;
 
 // ===== FOOTER AYAT / HADITS BERGANTIAN =====
 const quoteEl = document.getElementById("quoteText");
