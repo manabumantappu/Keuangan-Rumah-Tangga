@@ -486,7 +486,7 @@ function showRamadhanReminder(){
 
   localStorage.setItem("ramadhanReminderShown", today);
 }
-async function loadCities(){
+function loadCities(){
   try{
     const res = await fetch(
       "https://api.myquran.com/v1/sholat/kota/semua"
