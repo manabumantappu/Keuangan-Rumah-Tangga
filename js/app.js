@@ -19,6 +19,7 @@ let sedekahValue, zakatValue, analysisResult, warningBox;
 let monthFilter, userFilter, ramadhanMode;
 let barCanvas, pieCanvas;
 let barChart, pieChart;
+let zakatIncomeEl, zakatMaalEl, zakatNoteEl;
 
 /* ===== INIT ===== */
 document.addEventListener("DOMContentLoaded", init);
@@ -34,7 +35,9 @@ function init(){
   categoryEl = document.getElementById("category");
   amountEl = document.getElementById("amount");
   noteEl = document.getElementById("note");
-
+zakatIncomeEl = document.getElementById("zakatIncome");
+zakatMaalEl   = document.getElementById("zakatMaal");
+zakatNoteEl   = document.getElementById("zakatNote");
   // DASHBOARD
   totalIncome = document.getElementById("totalIncome");
   totalExpense = document.getElementById("totalExpense");
@@ -131,8 +134,32 @@ function renderDashboard(){
   balance.textContent      = rupiah(inc - exp);
   saving.textContent       = rupiah((inc - exp) * 0.2);
   sedekahValue.textContent = rupiah(sed);
-  zakatValue.textContent   =
-    rupiah((inc - exp) >= 85000000 ? (inc - exp) * 0.025 : 0);
+  // ===== ZAKAT PENGHASILAN =====
+const zakatPenghasilan = inc * 0.025;
+
+// ===== ZAKAT MAAL =====
+const nisab = 85000000;
+const saldoBersih = inc - exp;
+const zakatMaal = saldoBersih >= nisab ? saldoBersih * 0.025 : 0;
+
+// tampilkan
+if(zakatIncomeEl) zakatIncomeEl.textContent = rupiah(zakatPenghasilan);
+if(zakatMaalEl)   zakatMaalEl.textContent   = rupiah(zakatMaal);
+
+// catatan
+if(zakatNoteEl){
+  if(zakatMaal > 0){
+    zakatNoteEl.innerHTML = `
+      🕌 <em>Zakat maal wajib ditunaikan karena harta telah mencapai nisab.</em>
+    `;
+    zakatNoteEl.style.color = "#c62828";
+  } else {
+    zakatNoteEl.innerHTML = `
+      ℹ️ <em>Harta belum mencapai nisab zakat maal.</em>
+    `;
+    zakatNoteEl.style.color = "#555";
+  }
+}
 
   warningBox.classList.toggle("hidden", exp < inc * 0.8);
 
