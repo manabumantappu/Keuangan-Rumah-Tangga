@@ -1,57 +1,64 @@
 /* =========================================================
    KEUANGAN RUMAH TANGGA ISLAMI
-   FINAL CLEAN VERSION
-   ========================================================= */
+   FINAL FIXED FULL - MOBILE FIRST
+   Cordova / Android Ready
+========================================================= */
 
-/* ===== GLOBAL DATA ===== */
+/* ===== GLOBAL STATE ===== */
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 let selectedMonth = "";
 let selectedUser = "all";
 let isRamadhan = false;
 let editIndex = null;
 
-/* ===== DOM ELEMENTS ===== */
-let transactionTable, transactionForm;
-let totalIncome, totalExpense, balance, saving;
-let sedekahValue, zakatValue, warningBox, analysisResult;
-let monthFilter, userFilter, ramadhanMode;
-let barChart, pieChart;
+/* ===== DOM ===== */
+let transactionForm, transactionTable;
 let dateEl, userEl, typeEl, categoryEl, amountEl, noteEl;
+let totalIncome, totalExpense, balance, saving;
+let sedekahValue, zakatValue, analysisResult, warningBox;
+let monthFilter, userFilter, ramadhanMode;
+let barCanvas, pieCanvas;
+let barChart, pieChart;
 
-/* ===== DOM READY ===== */
+/* ===== INIT ===== */
 document.addEventListener("DOMContentLoaded", init);
 
-function init() {
+function init(){
+  // FORM
+  transactionForm = document.getElementById("transactionForm");
   transactionTable = document.getElementById("transactionTable");
-  transactionForm  = document.getElementById("transactionForm");
 
-  totalIncome   = document.getElementById("totalIncome");
-  totalExpense  = document.getElementById("totalExpense");
-  balance       = document.getElementById("balance");
-  saving        = document.getElementById("saving");
-  sedekahValue  = document.getElementById("sedekahValue");
-  zakatValue    = document.getElementById("zakatValue");
-  warningBox    = document.getElementById("warningBox");
-  analysisResult= document.getElementById("analysisResult");
-
-  monthFilter   = document.getElementById("monthFilter");
-  userFilter    = document.getElementById("userFilter");
-  ramadhanMode  = document.getElementById("ramadhanMode");
-
-  barChart      = document.getElementById("barChart");
-  pieChart      = document.getElementById("pieChart");
-
-  dateEl     = document.getElementById("date");
-  userEl     = document.getElementById("user");
-  typeEl     = document.getElementById("type");
+  dateEl = document.getElementById("date");
+  userEl = document.getElementById("user");
+  typeEl = document.getElementById("type");
   categoryEl = document.getElementById("category");
-  amountEl   = document.getElementById("amount");
-  noteEl     = document.getElementById("note");
+  amountEl = document.getElementById("amount");
+  noteEl = document.getElementById("note");
 
+  // DASHBOARD
+  totalIncome = document.getElementById("totalIncome");
+  totalExpense = document.getElementById("totalExpense");
+  balance = document.getElementById("balance");
+  saving = document.getElementById("saving");
+  sedekahValue = document.getElementById("sedekahValue");
+  zakatValue = document.getElementById("zakatValue");
+  analysisResult = document.getElementById("analysisResult");
+  warningBox = document.getElementById("warningBox");
+
+  // FILTER
+  monthFilter = document.getElementById("monthFilter");
+  userFilter = document.getElementById("userFilter");
+  ramadhanMode = document.getElementById("ramadhanMode");
+
+  // CHART
+  barCanvas = document.getElementById("barChart");
+  pieCanvas = document.getElementById("pieChart");
+
+  // EVENTS
   transactionForm.addEventListener("submit", onSubmit);
-  monthFilter.onchange   = e => { selectedMonth = e.target.value; update(); };
-  userFilter.onchange    = e => { selectedUser  = e.target.value; update(); };
-  ramadhanMode.onchange  = e => { isRamadhan = e.target.checked; update(); };
+  monthFilter.onchange = e => { selectedMonth = e.target.value; update(); };
+  userFilter.onchange = e => { selectedUser = e.target.value; update(); };
+  ramadhanMode.onchange = e => { isRamadhan = e.target.checked; update(); };
 
   setupTheme();
   setupQuotes();
@@ -60,104 +67,7 @@ function init() {
   update();
 }
 
-/* ===== STORAGE ===== */
-function save() {
-  localStorage.setItem("transactions", JSON.stringify(transactions));
-}
-
-/* ===== FILTER ===== */
-function filtered() {
-  return transactions.filter(t =>
-    (!selectedMonth || t.date.startsWith(selectedMonth)) &&
-    (selectedUser === "all" || t.user === selectedUser)
-  );
-}
-
-/* ===== DASHBOARD ===== */
-function renderDashboard() {
-  let inc = 0, exp = 0, sed = 0;
-
-  filtered().forEach(t => {
-    if (t.type === "income") inc += t.amount;
-    else if (t.type === "expense") exp += t.amount;
-    else if (t.type === "sedekah") sed += t.amount;
-  });
-
-  totalIncome.textContent  = rupiah(inc);
-  totalExpense.textContent = rupiah(exp);
-  balance.textContent      = rupiah(inc - exp);
-  saving.textContent       = rupiah((inc - exp) * 0.2);
-  sedekahValue.textContent = rupiah(sed);
-  zakatValue.textContent   =
-    (inc - exp >= 85000000) ? rupiah((inc - exp) * 0.025) : "Rp 0";
-
-  const persenSedekah = isRamadhan ? 0.08 : 0.05;
-  document.getElementById("sedekahRecommend").textContent =
-    rupiah(inc * persenSedekah);
-
-  if (exp >= inc * (isRamadhan ? 0.7 : 0.8)) {
-    warningBox.classList.remove("hidden");
-    warningBox.textContent = "⚠️ Pengeluaran mendekati/melewati pemasukan";
-  } else {
-    warningBox.classList.add("hidden");
-  }
-}
-
-/* ===== ANALISIS ===== */
-function renderAnalysis() {
-  const exp = filtered().filter(t => t.type === "expense");
-  if (!exp.length) {
-    analysisResult.textContent = "Tidak ada data";
-    return;
-  }
-
-  const total = exp.reduce((a,b)=>a+b.amount,0);
-  const cat = {};
-  exp.forEach(t => cat[t.category] = (cat[t.category]||0) + t.amount);
-
-  const [c,v] = Object.entries(cat).sort((a,b)=>b[1]-a[1])[0];
-  analysisResult.innerHTML =
-    `Terbesar: <b>${c}</b> (${Math.round(v/total*100)}%)<br>💡 Kurangi ${c}`;
-}
-
-/* ===== TABLE ===== */
-function renderTable() {
-  transactionTable.innerHTML = "";
-  filtered().forEach((t,i)=>{
-    transactionTable.innerHTML += `
-      <tr>
-        <td>${t.date}</td>
-        <td>${t.user}</td>
-        <td>${t.type}</td>
-        <td>${t.category}</td>
-        <td>${rupiah(t.amount)}</td>
-        <td>${t.note}</td>
-        <td>
-          <button onclick="editTransaction(${i})">✏️</button>
-          <button onclick="deleteTransaction(${i})">🗑️</button>
-        </td>
-      </tr>`;
-  });
-}
-
-/* ===== CHART ===== */
-let bar, pie;
-function renderCharts() {
-  let inc=0, exp=0, cat={};
-  filtered().forEach(t=>{
-    if(t.type==="income") inc+=t.amount;
-    if(t.type==="expense"){
-      exp+=t.amount;
-      cat[t.category]=(cat[t.category]||0)+t.amount;
-    }
-  });
-
-  bar?.destroy(); pie?.destroy();
-  bar = new Chart(barChart,{type:"bar",data:{labels:["Masuk","Keluar"],datasets:[{data:[inc,exp]}]}});
-  pie = new Chart(pieChart,{type:"pie",data:{labels:Object.keys(cat),datasets:[{data:Object.values(cat)}]}});
-}
-
-/* ===== SUBMIT ===== */
+/* ===== CORE ===== */
 function onSubmit(e){
   e.preventDefault();
 
@@ -166,9 +76,11 @@ function onSubmit(e){
     user: userEl.value,
     type: typeEl.value,
     category: categoryEl.value,
-    amount: +amountEl.value,
+    amount: Number(amountEl.value),
     note: noteEl.value
   };
+
+  if(!data.date || !data.amount) return;
 
   if(editIndex !== null){
     transactions[editIndex] = data;
@@ -178,12 +90,22 @@ function onSubmit(e){
   }
 
   save();
-  e.target.reset();
+  transactionForm.reset();
   update();
 }
 
-/* ===== UTIL ===== */
-function rupiah(n){ return "Rp " + n.toLocaleString("id-ID"); }
+function save(){
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+}
+
+function filtered(){
+  return transactions.filter(t =>
+    (!selectedMonth || t.date.startsWith(selectedMonth)) &&
+    (selectedUser === "all" || t.user === selectedUser)
+  );
+}
+
+/* ===== RENDER ===== */
 function update(){
   renderDashboard();
   renderAnalysis();
@@ -191,96 +113,141 @@ function update(){
   renderCharts();
 }
 
-/* ===== RESET / UNDO ===== */
+function rupiah(n){
+  return "Rp " + n.toLocaleString("id-ID");
+}
+
+function renderDashboard(){
+  let inc=0, exp=0, sed=0;
+
+  filtered().forEach(t=>{
+    if(t.type==="income") inc+=t.amount;
+    if(t.type==="expense") exp+=t.amount;
+    if(t.type==="sedekah") sed+=t.amount;
+  });
+
+  totalIncome.textContent = rupiah(inc);
+  totalExpense.textContent = rupiah(exp);
+  balance.textContent = rupiah(inc-exp);
+  saving.textContent = rupiah((inc-exp)*0.2);
+  sedekahValue.textContent = rupiah(sed);
+  zakatValue.textContent = rupiah((inc-exp)>=85000000 ? (inc-exp)*0.025 : 0);
+
+  warningBox.classList.toggle("hidden", exp < inc*0.8);
+}
+
+function renderAnalysis(){
+  const exp = filtered().filter(t=>t.type==="expense");
+  if(!exp.length){
+    analysisResult.textContent = "Tidak ada data";
+    return;
+  }
+  const total = exp.reduce((a,b)=>a+b.amount,0);
+  const cat={};
+  exp.forEach(t=>cat[t.category]=(cat[t.category]||0)+t.amount);
+  const [c,v]=Object.entries(cat).sort((a,b)=>b[1]-a[1])[0];
+  analysisResult.innerHTML = `Terbesar: <b>${c}</b> (${Math.round(v/total*100)}%)`;
+}
+
+function renderTable(){
+  transactionTable.innerHTML="";
+  filtered().forEach((t,i)=>{
+    transactionTable.innerHTML+=`
+      <tr>
+        <td>${t.date}</td>
+        <td>${t.user}</td>
+        <td>${t.type}</td>
+        <td>${t.category}</td>
+        <td>${rupiah(t.amount)}</td>
+        <td>${t.note||""}</td>
+        <td>
+          <button onclick="editTransaction(${i})">✏️</button>
+          <button onclick="deleteTransaction(${i})">🗑️</button>
+        </td>
+      </tr>`;
+  });
+}
+
+/* ===== CHART (AUTO DISABLE LOW-END) ===== */
+function renderCharts(){
+  if(!window.Chart || window.innerWidth < 360) return;
+
+  let inc=0, exp=0, cat={};
+  filtered().forEach(t=>{
+    if(t.type==="income") inc+=t.amount;
+    if(t.type==="expense"){ exp+=t.amount; cat[t.category]=(cat[t.category]||0)+t.amount; }
+  });
+
+  barChart?.destroy();
+  pieChart?.destroy();
+
+  barChart = new Chart(barCanvas,{type:"bar",data:{labels:["Masuk","Keluar"],datasets:[{data:[inc,exp]}]}});
+  pieChart = new Chart(pieCanvas,{type:"pie",data:{labels:Object.keys(cat),datasets:[{data:Object.values(cat)}]}});
+}
+
+/* ===== ACTION ===== */
+window.editTransaction = i=>{
+  const t = filtered()[i];
+  dateEl.value=t.date; userEl.value=t.user; typeEl.value=t.type;
+  categoryEl.value=t.category; amountEl.value=t.amount; noteEl.value=t.note;
+  editIndex = transactions.indexOf(t);
+};
+
+window.deleteTransaction = i=>{
+  const t = filtered()[i];
+  transactions.splice(transactions.indexOf(t),1);
+  save(); update();
+};
+
+/* ===== RESET / BACKUP ===== */
 window.resetData = ()=>{
   if(!confirm("Hapus semua data?")) return;
-  localStorage.setItem("transactions_backup", JSON.stringify(transactions));
+  localStorage.setItem("transactions_backup",JSON.stringify(transactions));
   localStorage.removeItem("transactions");
   location.reload();
 };
-
 window.undoReset = ()=>{
   const b = localStorage.getItem("transactions_backup");
-  if(!b) return alert("Tidak ada data");
-  localStorage.setItem("transactions", b);
+  if(!b) return alert("Tidak ada backup");
+  localStorage.setItem("transactions",b);
   location.reload();
 };
 
 /* ===== EXPORT / IMPORT ===== */
 window.exportData = ()=>{
-  const blob = new Blob([JSON.stringify(transactions,null,2)],{type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "keuangan-rumah-tangga.json";
+  const blob=new Blob([JSON.stringify(transactions,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="keuangan-rumah-tangga.json";
   a.click();
 };
-
-window.triggerImport = ()=>{
-  document.getElementById("importFile")?.click();
-};
-
+window.triggerImport = ()=>document.getElementById("importFile").click();
 function setupImport(){
-  const input = document.getElementById("importFile");
-  if(!input) return;
-
-  input.addEventListener("change",()=>{
-    const r = new FileReader();
-    r.onload = ()=>{
-      transactions = JSON.parse(r.result);
-      save();
-      update();
-      alert("✅ Import berhasil");
-    };
-    r.readAsText(input.files[0]);
-    input.value="";
-  });
+  const i=document.getElementById("importFile");
+  if(!i) return;
+  i.onchange=()=>{
+    const r=new FileReader();
+    r.onload=()=>{transactions=JSON.parse(r.result);save();update();alert("Import berhasil");};
+    r.readAsText(i.files[0]); i.value="";
+  };
 }
-
-/* ===== EDIT / DELETE ===== */
-window.editTransaction = index=>{
-  const t = filtered()[index];
-  if(!t) return;
-
-  dateEl.value = t.date;
-  userEl.value = t.user;
-  typeEl.value = t.type;
-  categoryEl.value = t.category;
-  amountEl.value = t.amount;
-  noteEl.value = t.note;
-
-  editIndex = transactions.indexOf(t);
-};
-
-window.deleteTransaction = index=>{
-  const t = filtered()[index];
-  transactions.splice(transactions.indexOf(t),1);
-  save();
-  update();
-};
 
 /* ===== THEME ===== */
 function setupTheme(){
-  const toggle = document.getElementById("themeToggle");
-  if(localStorage.getItem("theme")==="dark"){
-    document.body.classList.add("dark");
-    if(toggle) toggle.checked=true;
-  }
-  toggle?.addEventListener("change",()=>{
-    document.body.classList.toggle("dark");
-    localStorage.setItem("theme",toggle.checked?"dark":"light");
-  });
+  const t=document.getElementById("themeToggle");
+  if(localStorage.getItem("theme")==="dark"){document.body.classList.add("dark");t.checked=true;}
+  t?.addEventListener("change",()=>{document.body.classList.toggle("dark");localStorage.setItem("theme",t.checked?"dark":"light");});
 }
 
 /* ===== QUOTES ===== */
 function setupQuotes(){
-  const q = document.getElementById("quoteText");
+  const q=document.getElementById("quoteText");
   if(!q) return;
   const arr=[
     "Harta tidak akan berkurang karena sedekah.",
     "Sesungguhnya pemboros adalah saudara setan.",
     "Jika kamu bersyukur niscaya Aku tambah nikmat."
   ];
-  let i=0;
-  q.textContent=arr[i];
+  let i=0; q.textContent=arr[i];
   setInterval(()=>{i=(i+1)%arr.length;q.textContent=arr[i];},10000);
 }
