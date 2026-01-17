@@ -10,6 +10,9 @@ let selectedMonth = "";
 let selectedUser = "all";
 let isRamadhan = false;
 let editIndex = null;
+let ramadhanStartDate = null;
+let ramadhanEndDate   = null;
+
 
 /* ===== DOM ===== */
 let transactionForm, transactionTable;
@@ -25,7 +28,31 @@ let zakatIncomeEl, zakatMaalEl, zakatNoteEl;
 document.addEventListener("DOMContentLoaded", init);
 
 function init(){
-  // FORM
+// SETTING TGL.RAMADHAN
+const ramadhanStartInput = document.getElementById("ramadhanStart");
+const ramadhanEndInput   = document.getElementById("ramadhanEnd");
+
+// load dari storage
+ramadhanStartDate = localStorage.getItem("ramadhanStart");
+ramadhanEndDate   = localStorage.getItem("ramadhanEnd");
+
+if(ramadhanStartDate) ramadhanStartInput.value = ramadhanStartDate;
+if(ramadhanEndDate)   ramadhanEndInput.value   = ramadhanEndDate;
+
+// simpan saat berubah
+ramadhanStartInput.onchange = () => {
+  localStorage.setItem("ramadhanStart", ramadhanStartInput.value);
+  ramadhanStartDate = ramadhanStartInput.value;
+  checkRamadhanAuto();
+};
+
+ramadhanEndInput.onchange = () => {
+  localStorage.setItem("ramadhanEnd", ramadhanEndInput.value);
+  ramadhanEndDate = ramadhanEndInput.value;
+  checkRamadhanAuto();
+};
+
+   // FORM
   transactionForm = document.getElementById("transactionForm");
   transactionTable = document.getElementById("transactionTable");
 
@@ -66,8 +93,9 @@ zakatNoteEl   = document.getElementById("zakatNote");
   setupTheme();
   setupQuotes();
   setupImport();
-  setupRamadhanReminder(); // REMINDER RAMADHAN
   update();
+  checkRamadhanAuto();// RAMADHAN SETTING
+
 }
 
 /* ===== CORE ===== */
@@ -399,40 +427,43 @@ function setupQuotes(){
   let i=0; q.textContent=arr[i];
   setInterval(()=>{i=(i+1)%arr.length;q.textContent=arr[i];},10000);
 }
-/* ===== RAMADHAN REMINDER (AUTO) ===== */
-function setupRamadhanReminder(){
+
+/* ===== RAMADHAN  ===== */
+function checkRamadhanAuto(){
+  if(!ramadhanStartDate || !ramadhanEndDate) return;
+
   const now = new Date();
-  const month = now.getMonth() + 1; // 1–12
+  const start = new Date(ramadhanStartDate);
+  const end   = new Date(ramadhanEndDate);
 
-  // 🌙 Perkiraan Ramadhan (AMAN OFFLINE)
-  const isRamadhanMonth = (month === 3 || month === 4);
-
-  // Auto aktifkan mode ramadhan
-  if(isRamadhanMonth){
+  if(now >= start && now <= end){
     isRamadhan = true;
-
-    const ramadhanToggle = document.getElementById("ramadhanMode");
-    if(ramadhanToggle) ramadhanToggle.checked = true;
-
     document.body.classList.add("ramadhan");
 
+    const toggle = document.getElementById("ramadhanMode");
+    if(toggle) toggle.checked = true;
+
     showRamadhanReminder();
+  } else {
+    isRamadhan = false;
+    document.body.classList.remove("ramadhan");
   }
+
+  update();
 }
-
 function showRamadhanReminder(){
-  // Jangan spam
-  if(localStorage.getItem("ramadhan_reminded") === "yes") return;
+  const last = localStorage.getItem("ramadhanReminderShown");
+  const today = new Date().toDateString();
 
-  setTimeout(()=>{
-    alert(
-      "🌙 Ramadhan Reminder\n\n" +
-      "• Perbanyak sedekah & infaq\n" +
-      "• Kendalikan pengeluaran\n" +
-      "• Tunaikan zakat tepat waktu\n\n" +
-      "“Barang siapa berpuasa Ramadhan karena iman…”"
-    );
+  if(last === today) return;
 
-    localStorage.setItem("ramadhan_reminded", "yes");
-  }, 1500);
+  alert(
+    "🌙 Ramadhan Mubarak\n\n" +
+    "• Perbanyak sedekah\n" +
+    "• Jaga pengeluaran\n" +
+    "• Tunaikan zakat tepat waktu\n\n" +
+    "Semoga Ramadhan membawa keberkahan 🤲"
+  );
+
+  localStorage.setItem("ramadhanReminderShown", today);
 }
