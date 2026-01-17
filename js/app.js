@@ -66,7 +66,7 @@ zakatNoteEl   = document.getElementById("zakatNote");
   setupTheme();
   setupQuotes();
   setupImport();
-
+  setupRamadhanReminder(); // REMINDER RAMADHAN
   update();
 }
 
@@ -398,4 +398,41 @@ function setupQuotes(){
   ];
   let i=0; q.textContent=arr[i];
   setInterval(()=>{i=(i+1)%arr.length;q.textContent=arr[i];},10000);
+}
+/* ===== RAMADHAN REMINDER (AUTO) ===== */
+function setupRamadhanReminder(){
+  const now = new Date();
+  const month = now.getMonth() + 1; // 1–12
+
+  // 🌙 Perkiraan Ramadhan (AMAN OFFLINE)
+  const isRamadhanMonth = (month === 3 || month === 4);
+
+  // Auto aktifkan mode ramadhan
+  if(isRamadhanMonth){
+    isRamadhan = true;
+
+    const ramadhanToggle = document.getElementById("ramadhanMode");
+    if(ramadhanToggle) ramadhanToggle.checked = true;
+
+    document.body.classList.add("ramadhan");
+
+    showRamadhanReminder();
+  }
+}
+
+function showRamadhanReminder(){
+  // Jangan spam
+  if(localStorage.getItem("ramadhan_reminded") === "yes") return;
+
+  setTimeout(()=>{
+    alert(
+      "🌙 Ramadhan Reminder\n\n" +
+      "• Perbanyak sedekah & infaq\n" +
+      "• Kendalikan pengeluaran\n" +
+      "• Tunaikan zakat tepat waktu\n\n" +
+      "“Barang siapa berpuasa Ramadhan karena iman…”"
+    );
+
+    localStorage.setItem("ramadhan_reminded", "yes");
+  }, 1500);
 }
