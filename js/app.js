@@ -529,3 +529,34 @@ async function loadPrayerTimes(){
     console.warn("Gagal load jadwal", e);
   }
 }
+async function renderRamadhanCalendar(){
+  const container = document.getElementById("ramadhanCalendar");
+  if(!container || !ramadhanStartDate) return;
+
+  container.innerHTML = "⏳ Memuat kalender Ramadhan...";
+
+  const start = new Date(ramadhanStartDate);
+  const today = new Date();
+  let html = "";
+
+  for(let i=0;i<30;i++){
+    const d = new Date(start);
+    d.setDate(start.getDate()+i);
+
+    const dateStr = d.toISOString().split("T")[0];
+    const isToday = d.toDateString() === today.toDateString();
+
+    const times = await getPrayerTimesByDate(dateStr);
+
+    html += `
+      <div class="ramadhan-day ${isToday?"today":""}">
+        <h4>Hari ke-${i+1} • ${dateStr}</h4>
+        🌙 Sahur : ${times.imsak}<br>
+        🕰️ Imsak : ${times.imsak}<br>
+        🌅 Buka  : ${times.maghrib}
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
+}
