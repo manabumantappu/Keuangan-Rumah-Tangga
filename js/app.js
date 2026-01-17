@@ -587,27 +587,27 @@ async function renderRamadhanCalendar(){
     const d = new Date(start);
     d.setDate(start.getDate()+i);
 
-   // format untuk API
+ // ⬅️ FORMAT UNTUK API (WAJIB)
 const apiDate = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")}`;
 
-// format untuk tampilan
+// ⬅️ FORMAT UNTUK TAMPILAN (INDONESIA)
 const displayDate = d.toLocaleDateString("id-ID", {
-  day:"2-digit", month:"long", year:"numeric"
+  day:"2-digit",
+  month:"long",
+  year:"numeric"
 });
 
+const times = await getPrayerTimesByDate(apiDate);
 
-    const isToday = d.toDateString() === today.toDateString();
+html += `
+  <div class="ramadhan-day ${isToday ? "today" : ""}">
+    <h4>Hari ke-${i+1} • ${displayDate}</h4>
+    🌙 Sahur : ${times.imsak}<br>
+    🕰️ Imsak : ${times.imsak}<br>
+    🌅 Buka  : ${times.maghrib}
+  </div>
+`;
 
-   const times = await getPrayerTimesByDate(apiDate);
-
-    html += `
-      <div class="ramadhan-day ${isToday?"today":""}">
-        <h4>Hari ke-${i+1} • ${dateStr}</h4>
-        🌙 Sahur : ${times.imsak}<br>
-        🕰️ Imsak : ${times.imsak}<br>
-        🌅 Buka  : ${times.maghrib}
-      </div>
-    `;
   }
 
   container.innerHTML = html;
