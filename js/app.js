@@ -118,13 +118,52 @@ function rupiah(n){
 }
 
 function renderDashboard(){
-  let inc=0, exp=0, sed=0;
+  let inc = 0, exp = 0, sed = 0;
 
+  // 1️⃣ HITUNG DULU SEMUA DATA
   filtered().forEach(t=>{
-    if(t.type==="income") inc+=t.amount;
-    if(t.type==="expense") exp+=t.amount;
-    if(t.type==="sedekah") sed+=t.amount;
+    if(t.type === "income") inc += t.amount;
+    if(t.type === "expense") exp += t.amount;
+    if(t.type === "sedekah") sed += t.amount;
   });
+
+  // 2️⃣ TAMPILKAN RINGKASAN
+  totalIncome.textContent  = rupiah(inc);
+  totalExpense.textContent = rupiah(exp);
+  balance.textContent      = rupiah(inc - exp);
+  saving.textContent       = rupiah((inc - exp) * 0.2);
+  sedekahValue.textContent = rupiah(sed);
+  zakatValue.textContent  =
+    rupiah((inc - exp) >= 85000000 ? (inc - exp) * 0.025 : 0);
+
+  // 3️⃣ PERINGATAN BOROS
+  warningBox.classList.toggle("hidden", exp < inc * 0.8);
+
+  // 4️⃣ REKOMENDASI SEDEKAH (FIXED)
+  const rekomEl = document.getElementById("sedekahRecommend");
+  const noteEl  = document.getElementById("sedekahNote");
+
+  const persen = isRamadhan ? 0.08 : 0.05;
+  const rekom  = inc * persen;
+
+  if(rekomEl) rekomEl.textContent = rupiah(rekom);
+
+  if(noteEl){
+    if(sed < rekom){
+      noteEl.innerHTML = `
+        💡 Dianjurkan menambah sedekah <b>${rupiah(rekom - sed)}</b><br>
+        <em>“Harta tidak akan berkurang karena sedekah.”</em>
+      `;
+      noteEl.style.color = "#c62828";
+    } else {
+      noteEl.innerHTML = `
+        ✅ Sedekah bulan ini sudah baik<br>
+        <em>Semoga Allah melipatgandakan rezekimu.</em>
+      `;
+      noteEl.style.color = "#0f9d58";
+    }
+  }
+}
 
   totalIncome.textContent = rupiah(inc);
   totalExpense.textContent = rupiah(exp);
@@ -137,17 +176,41 @@ function renderDashboard(){
 }
 
 function renderAnalysis(){
-  const exp = filtered().filter(t=>t.type==="expense");
-  if(!exp.length){
-    analysisResult.textContent = "Tidak ada data";
+  const expenses = filtered().filter(t => t.type === "expense");
+
+  if(!expenses.length){
+    analysisResult.innerHTML = "Belum ada data pengeluaran.";
     return;
   }
-  const total = exp.reduce((a,b)=>a+b.amount,0);
-  const cat={};
-  exp.forEach(t=>cat[t.category]=(cat[t.category]||0)+t.amount);
-  const [c,v]=Object.entries(cat).sort((a,b)=>b[1]-a[1])[0];
-  analysisResult.innerHTML = `Terbesar: <b>${c}</b> (${Math.round(v/total*100)}%)`;
+
+  const total = expenses.reduce((a,b)=>a+b.amount,0);
+  const cat = {};
+  expenses.forEach(t=>{
+    cat[t.category] = (cat[t.category] || 0) + t.amount;
+  });
+
+  const [topCat, topVal] =
+    Object.entries(cat).sort((a,b)=>b[1]-a[1])[0];
+
+  const percent = Math.round((topVal / total) * 100);
+
+  let tip = "💡 Kelola pengeluaran dengan bijak.";
+  if(percent > 50){
+    tip = `⚠️ Pengeluaran ${topCat} sangat dominan. Pertimbangkan penghematan.`;
+  }
+  if(topCat.toLowerCase().includes("makan")){
+    tip = "🍽️ Kurangi jajan berlebihan, utamakan masak di rumah.";
+  }
+  if(topCat.toLowerCase().includes("loan")){
+    tip = "🚫 Utang berlebih tidak dianjurkan dalam Islam. Lunasi bertahap.";
+  }
+
+  analysisResult.innerHTML = `
+    <strong>Terbesar:</strong> ${topCat} (${percent}%)<br>
+    ${tip}
+  `;
 }
+
 
 function renderTable(){
   transactionTable.innerHTML="";
