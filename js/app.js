@@ -566,8 +566,8 @@ async function renderRamadhanCalendar(){
   container.innerHTML = html;
 }
 async function getPrayerTimesByDate(date){
-  const cityId = localStorage.getItem("kemenag_city") || "1301"; // default Jakarta
-  const cacheKey = `pray_${cityId}_${date}`;
+ const cityId = localStorage.getItem("cityId") || "1301";
+ const cacheKey = `pray_${cityId}_${date}`;
 
   if(localStorage.getItem(cacheKey)){
     return JSON.parse(localStorage.getItem(cacheKey));
