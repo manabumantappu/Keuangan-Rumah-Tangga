@@ -158,8 +158,18 @@ function renderDashboard(){
   filtered().forEach(t=>{
     if(t.type === "income") inc += t.amount;
     if(t.type === "expense") exp += t.amount;
-    if(t.type === "sedekah") sed += t.amount;
+   if(t.type === "sedekah" || t.type === "zakat fitrah") sed += t.amount;
   });
+   // ===== ZAKAT FITRAH =====
+let zakatFitrah = 0;
+filtered().forEach(t=>{
+  if(t.type === "zakat fitrah") zakatFitrah += t.amount;
+});
+
+const zakatFitrahEl = document.getElementById("zakatFitrah");
+if(zakatFitrahEl){
+  zakatFitrahEl.textContent = rupiah(zakatFitrah);
+}
 
   totalIncome.textContent  = rupiah(inc);
   totalExpense.textContent = rupiah(exp);
