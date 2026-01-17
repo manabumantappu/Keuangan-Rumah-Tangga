@@ -120,26 +120,23 @@ function rupiah(n){
 function renderDashboard(){
   let inc = 0, exp = 0, sed = 0;
 
-  // 1️⃣ HITUNG DULU SEMUA DATA
   filtered().forEach(t=>{
     if(t.type === "income") inc += t.amount;
     if(t.type === "expense") exp += t.amount;
     if(t.type === "sedekah") sed += t.amount;
   });
 
-  // 2️⃣ TAMPILKAN RINGKASAN
   totalIncome.textContent  = rupiah(inc);
   totalExpense.textContent = rupiah(exp);
   balance.textContent      = rupiah(inc - exp);
   saving.textContent       = rupiah((inc - exp) * 0.2);
   sedekahValue.textContent = rupiah(sed);
-  zakatValue.textContent  =
+  zakatValue.textContent   =
     rupiah((inc - exp) >= 85000000 ? (inc - exp) * 0.025 : 0);
 
-  // 3️⃣ PERINGATAN BOROS
   warningBox.classList.toggle("hidden", exp < inc * 0.8);
 
-  // 4️⃣ REKOMENDASI SEDEKAH (FIXED)
+  // ===== REKOMENDASI SEDEKAH =====
   const rekomEl = document.getElementById("sedekahRecommend");
   const noteEl  = document.getElementById("sedekahNote");
 
@@ -165,16 +162,7 @@ function renderDashboard(){
   }
 }
 
-  totalIncome.textContent = rupiah(inc);
-  totalExpense.textContent = rupiah(exp);
-  balance.textContent = rupiah(inc-exp);
-  saving.textContent = rupiah((inc-exp)*0.2);
-  sedekahValue.textContent = rupiah(sed);
-  zakatValue.textContent = rupiah((inc-exp)>=85000000 ? (inc-exp)*0.025 : 0);
-
-  warningBox.classList.toggle("hidden", exp < inc*0.8);
-}
-
+ 
 function renderAnalysis(){
   const expenses = filtered().filter(t => t.type === "expense");
 
