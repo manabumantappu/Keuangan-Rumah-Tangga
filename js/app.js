@@ -487,37 +487,41 @@ function showRamadhanReminder(){
   localStorage.setItem("ramadhanReminderShown", today);
 }
 function loadCities(){
-  try{
-    const res = await fetch(
-      "https://api.myquran.com/v1/sholat/kota/semua"
-    );
-    const data = await res.json();
+  const cities = [
+    {id:"1301", lokasi:"Jakarta"},
+    {id:"3273", lokasi:"Bandung"},
+    {id:"3578", lokasi:"Surabaya"},
+    {id:"3374", lokasi:"Semarang"},
+    {id:"5171", lokasi:"Denpasar"},
+    {id:"7371", lokasi:"Makassar"},
+    {id:"6471", lokasi:"Balikpapan"},
+    {id:"6171", lokasi:"Pontianak"},
+    {id:"3173", lokasi:"Depok"},
+    {id:"3671", lokasi:"Tangerang"}
+  ];
 
-    const select = document.getElementById("citySelect");
-    if(!select) return;
+  const select = document.getElementById("citySelect");
+  if(!select) return;
 
-    select.innerHTML += data.data.map(c =>
+  select.innerHTML =
+    `<option value="">-- Pilih Kota --</option>` +
+    cities.map(c =>
       `<option value="${c.id}">${c.lokasi}</option>`
     ).join("");
 
-    // restore pilihan
-    const saved = localStorage.getItem("cityId");
-    if(saved){
-      select.value = saved;
-      selectedCityId = saved;
-      loadPrayerTimes();
-    }
-
-    select.onchange = () => {
-      selectedCityId = select.value;
-      localStorage.setItem("cityId", selectedCityId);
-      loadPrayerTimes();
-    };
-
-  }catch(e){
-    console.warn("Gagal load kota", e);
+  const saved = localStorage.getItem("cityId");
+  if(saved){
+    select.value = saved;
+    selectedCityId = saved;
   }
+
+  select.onchange = () => {
+    selectedCityId = select.value;
+    localStorage.setItem("cityId", selectedCityId);
+    renderRamadhanCalendar();
+  };
 }
+
 async function loadPrayerTimes(){
   if(!selectedCityId) return;
 
