@@ -353,9 +353,21 @@ function setupQuotes(){
   const q=document.getElementById("quoteText");
   if(!q) return;
   const arr=[
-    "Harta tidak akan berkurang karena sedekah.",
-    "Sesungguhnya pemboros adalah saudara setan.",
-    "Jika kamu bersyukur niscaya Aku tambah nikmat."
+    '“Sesungguhnya pemboros itu adalah saudara setan.” (QS. Al-Isra: 27)',
+    '“Harta tidak akan berkurang karena sedekah.” (HR. Muslim)',
+    '“Jika kamu bersyukur, niscaya Aku akan menambah (nikmat) kepadamu.” (QS. Ibrahim: 7)',
+    '“Dan apa saja yang kamu infakkan, Allah akan menggantinya.” (QS. Saba: 39)',
+    '“Sebaik-baik harta adalah yang berada di tangan orang saleh.” (HR. Ahmad)',
+    '“Barang siapa bertakwa kepada Allah, niscaya Dia akan memberinya rezeki dari arah yang tidak disangka-sangka.” (QS. At-Talaq: 2–3)',
+    '“Tangan di atas lebih baik daripada tangan di bawah.” (HR. Bukhari & Muslim)',
+    '“Tidaklah seorang hamba bersedekah dengan sesuatu, melainkan Allah akan menggantinya.” (HR. Ahmad)',
+    '“Makan dan minumlah, tetapi jangan berlebihan.” (QS. Al-A’raf: 31)',
+    '“Sesungguhnya Allah mencintai jika seseorang bekerja, ia menyempurnakannya.” (HR. Thabrani)',
+    '“Orang yang memberi nafkah kepada keluarganya dengan niat karena Allah, maka itu adalah sedekah.” (HR. Bukhari)',
+    '“Harta dan anak-anak adalah perhiasan dunia, tetapi amal saleh lebih baik pahalanya.” (QS. Al-Kahfi: 46)',
+    '“Sebaik-baik dinar adalah yang dinafkahkan untuk keluarganya.” (HR. Muslim)',
+    '“Perumpamaan orang yang berinfak di jalan Allah seperti sebutir biji yang menumbuhkan tujuh tangkai.” (QS. Al-Baqarah: 261)',
+    '“Tidak ada satu hari pun ketika hamba berada di pagi hari, melainkan ada dua malaikat yang turun.” (HR. Bukhari)'
   ];
   let i=0; q.textContent=arr[i];
   setInterval(()=>{i=(i+1)%arr.length;q.textContent=arr[i];},10000);
