@@ -12,6 +12,7 @@ let isRamadhan = false;
 let editIndex = null;
 let ramadhanStartDate = null;
 let ramadhanEndDate   = null;
+let selectedCityId = null;
 
 
 /* ===== DOM ===== */
@@ -98,7 +99,7 @@ zakatNoteEl   = document.getElementById("zakatNote");
   setupImport();
   update();
   checkRamadhanAuto();// RAMADHAN SETTING
-
+  loadCities();
 }
 
 /* ===== CORE ===== */
@@ -469,4 +470,62 @@ function showRamadhanReminder(){
   );
 
   localStorage.setItem("ramadhanReminderShown", today);
+}
+async function loadCities(){
+  try{
+    const res = await fetch(
+      "https://api.myquran.com/v1/sholat/kota/semua"
+    );
+    const data = await res.json();
+
+    const select = document.getElementById("citySelect");
+    if(!select) return;
+
+    select.innerHTML += data.data.map(c =>
+      `<option value="${c.id}">${c.lokasi}</option>`
+    ).join("");
+
+    // restore pilihan
+    const saved = localStorage.getItem("cityId");
+    if(saved){
+      select.value = saved;
+      selectedCityId = saved;
+      loadPrayerTimes();
+    }
+
+    select.onchange = () => {
+      selectedCityId = select.value;
+      localStorage.setItem("cityId", selectedCityId);
+      loadPrayerTimes();
+    };
+
+  }catch(e){
+    console.warn("Gagal load kota", e);
+  }
+}
+async function loadPrayerTimes(){
+  if(!selectedCityId) return;
+
+  const today = new Date();
+  const y = today.getFullYear();
+  const m = String(today.getMonth()+1).padStart(2,"0");
+  const d = String(today.getDate()).padStart(2,"0");
+
+  try{
+    const res = await fetch(
+      `https://api.myquran.com/v1/sholat/jadwal/${selectedCityId}/${y}/${m}/${d}`
+    );
+    const json = await res.json();
+    const j = json.data.jadwal;
+
+    // simpan jam penting
+    localStorage.setItem("sahurTime", j.imsak || j.subuh);
+    localStorage.setItem("bukaTime", j.maghrib);
+
+    sahurTime = j.imsak || j.subuh;
+    bukaTime  = j.maghrib;
+
+  }catch(e){
+    console.warn("Gagal load jadwal", e);
+  }
 }
