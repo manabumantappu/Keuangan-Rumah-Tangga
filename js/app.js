@@ -448,6 +448,11 @@ function checkRamadhanAuto(){
     if(toggle) toggle.checked = true;
 
     showRamadhanReminder();
+     
+     if(isRamadhan){
+  renderRamadhanCalendar();
+}
+
   } else {
     isRamadhan = false;
     document.body.classList.remove("ramadhan");
@@ -559,4 +564,24 @@ async function renderRamadhanCalendar(){
   }
 
   container.innerHTML = html;
+}
+async function getPrayerTimesByDate(date){
+  const cityId = localStorage.getItem("kemenag_city") || "1301"; // default Jakarta
+  const cacheKey = `pray_${cityId}_${date}`;
+
+  if(localStorage.getItem(cacheKey)){
+    return JSON.parse(localStorage.getItem(cacheKey));
+  }
+
+  const url = `https://api.myquran.com/v1/sholat/jadwal/${cityId}/${date}`;
+  const res = await fetch(url);
+  const json = await res.json();
+
+  const times = {
+    imsak: json.data.jadwal.imsak,
+    maghrib: json.data.jadwal.maghrib
+  };
+
+  localStorage.setItem(cacheKey, JSON.stringify(times));
+  return times;
 }
