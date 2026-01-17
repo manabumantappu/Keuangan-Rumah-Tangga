@@ -54,51 +54,6 @@
     <h2>📊 Analisis Pengeluaran</h2>
     <div id="analysisResult"></div>
     <div class="ai-tips" id="aiTips"></div>
-function renderAITips(inc, exp, sed, topCat){
-  const el = document.getElementById("aiTips");
-  if(!el) return;
-
-  let tips = "";
-
-  // 🔴 Sedekah
-  if(sed === 0 && inc > 0){
-    tips = `
-      🕌 <b>AI Islami:</b><br>
-      Belum ada sedekah tercatat bulan ini.<br>
-      <em>“Harta tidak akan berkurang karena sedekah.”</em>
-    `;
-  }
-
-  // 🟠 Utang dominan
-  else if(topCat.toLowerCase().includes("loan")){
-    tips = `
-      ⚠️ <b>AI Islami:</b><br>
-      Utang mendominasi pengeluaran.<br>
-      <em>Islam menganjurkan hidup tanpa memberatkan diri.</em>
-    `;
-  }
-
-  // 🟢 Boros
-  else if(exp > inc * 0.8){
-    tips = `
-      ⚠️ <b>AI Islami:</b><br>
-      Pengeluaran mendekati pemasukan.<br>
-      <em>“Makan dan minumlah, tetapi jangan berlebihan.”</em>
-    `;
-  }
-
-  // 🔵 Sehat
-  else{
-    tips = `
-      ✅ <b>AI Islami:</b><br>
-      Keuangan keluarga dalam kondisi baik.<br>
-      <em>Terus jaga amanah rezeki dari Allah.</em>
-    `;
-  }
-
-  el.innerHTML = tips;
-}
-
   </section>
 
   <!-- ZAKAT -->
