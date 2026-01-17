@@ -1,3 +1,4 @@
+let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 document.addEventListener("DOMContentLoaded", () => {
 // ===== AMBIL ELEMEN DOM (WAJIB) =====
 const transactionTable = document.getElementById("transactionTable");
@@ -27,7 +28,7 @@ const category = document.getElementById("category");
 const amount   = document.getElementById("amount");
 const note     = document.getElementById("note");
 
-let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
 
 let selectedMonth = "";
 let selectedUser = "all";
@@ -375,10 +376,8 @@ function triggerImport(){
   if(input) input.click();
 }
 
-document.addEventListener("DOMContentLoaded", ()=>{
-  const importInput = document.getElementById("importFile");
-  if(!importInput) return;
-
+const importInput = document.getElementById("importFile");
+if(importInput){
   importInput.addEventListener("change", function(){
     const file = this.files[0];
     if(!file) return;
@@ -400,12 +399,12 @@ document.addEventListener("DOMContentLoaded", ()=>{
         alert("✅ Data berhasil diimport");
       }catch(err){
         alert("❌ Gagal membaca file");
-        console.error(err);
       }
     };
 
     reader.readAsText(file);
-    this.value = ""; // reset input
+    this.value = "";
   });
-});
+}
+
 
