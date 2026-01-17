@@ -42,10 +42,16 @@ if(ramadhanEndDate)   ramadhanEndInput.value   = ramadhanEndDate;
 
 // simpan saat berubah
 ramadhanStartInput.onchange = () => {
-  localStorage.setItem("ramadhanStart", ramadhanStartInput.value);
-  ramadhanStartDate = ramadhanStartInput.value;
+  const val = ramadhanStartInput.value; // YYYY-MM-DD
+  if(!val) return;
+
+  ramadhanStartDate = val;
+  localStorage.setItem("ramadhanStart", val);
+
   checkRamadhanAuto();
+  renderRamadhanCalendar(); // ⬅️ PENTING
 };
+
 
 ramadhanEndInput.onchange = () => {
   localStorage.setItem("ramadhanEnd", ramadhanEndInput.value);
@@ -569,10 +575,10 @@ async function loadPrayerTimes(){
 }
 async function renderRamadhanCalendar(){
   const container = document.getElementById("ramadhanCalendar");
-  if(!container || !ramadhanStartDate) return;
-
-  container.innerHTML = "⏳ Memuat kalender Ramadhan...";
-
+ if(!container || !ramadhanStartDate){
+  container.innerHTML = "⚠️ Silakan set Tanggal Mulai Ramadhan terlebih dahulu";
+  return;
+}
   const start = new Date(ramadhanStartDate);
   const today = new Date();
   let html = "";
@@ -581,10 +587,18 @@ async function renderRamadhanCalendar(){
     const d = new Date(start);
     d.setDate(start.getDate()+i);
 
-    const dateStr = d.toISOString().split("T")[0];
+   // format untuk API
+const apiDate = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")}`;
+
+// format untuk tampilan
+const displayDate = d.toLocaleDateString("id-ID", {
+  day:"2-digit", month:"long", year:"numeric"
+});
+
+
     const isToday = d.toDateString() === today.toDateString();
 
-    const times = await getPrayerTimesByDate(dateStr);
+   const times = await getPrayerTimesByDate(apiDate);
 
     html += `
       <div class="ramadhan-day ${isToday?"today":""}">
