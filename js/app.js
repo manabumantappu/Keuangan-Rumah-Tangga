@@ -100,6 +100,13 @@ zakatNoteEl   = document.getElementById("zakatNote");
   update();
   checkRamadhanAuto();// RAMADHAN SETTING
   loadCities();
+   
+// ⬇️ TAMBAH
+setTimeout(() => {
+  if (localStorage.getItem("ramadhanStart")) {
+    renderRamadhanCalendar();
+  }
+}, 500);
 }
 
 /* ===== CORE ===== */
@@ -536,6 +543,7 @@ function loadCities(){
   select.onchange = () => {
     selectedCityId = select.value;
     localStorage.setItem("cityId", selectedCityId);
+    await loadPrayerTimes();      // ambil jadwal
     renderRamadhanCalendar();
   };
 }
