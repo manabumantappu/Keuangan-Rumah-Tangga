@@ -56,12 +56,6 @@
   <!-- AI ISLAMI TIPS -->
   <div id="aiTips" class="ai-tips"></div>
 </section>
-<!-- KALENDER RAMADHAN -->
-<section class="analysis-section">
-  <h2>📅 Kalender Ramadhan</h2>
-  <div id="ramadhanCalendar" class="ramadhan-calendar"></div>
-</section>
-
 
   <!-- ZAKAT & SEDEKAH -->
   <section class="analysis-section">
@@ -84,7 +78,25 @@
 
   <small id="zakatNote"></small>
 </section>
+  
+<!-- SETTINGS RAMADHAN -->
+<section class="analysis-section">
+  <h2>🌙 Pengaturan Ramadhan</h2>
 
+  <label>
+    Tanggal Mulai Ramadhan:
+    <input type="date" id="ramadhanStart">
+  </label>
+
+  <label>
+    Tanggal Akhir Ramadhan:
+    <input type="date" id="ramadhanEnd">
+  </label>
+
+  <p class="hint">
+    Digunakan untuk reminder otomatis, sedekah & zakat Ramadhan
+  </p>
+</section>
 
   <!-- FILTER & THEME -->
 <section class="filter-section">
@@ -112,26 +124,7 @@
   </div>
 </section>
   
-<!-- SETTINGS RAMADHAN -->
-<section class="analysis-section">
-  <h2>🌙 Pengaturan Ramadhan</h2>
-
-  <label>
-    Tanggal Mulai Ramadhan:
-    <input type="date" id="ramadhanStart">
-  </label>
-
-  <label>
-    Tanggal Akhir Ramadhan:
-    <input type="date" id="ramadhanEnd">
-  </label>
-
-  <p class="hint">
-    Digunakan untuk reminder otomatis, sedekah & zakat Ramadhan
-  </p>
-</section>
-  
-<section class="analysis-section">
+ <section class="analysis-section">
   <h2>📍 Kota Jadwal Puasa</h2>
 
   <select id="citySelect">
@@ -141,6 +134,12 @@
   <p class="hint">
     Jadwal sahur & buka mengikuti Kemenag RI
   </p>
+</section>
+  
+ <!-- KALENDER RAMADHAN -->
+<section class="analysis-section">
+  <h2>📅 Kalender Ramadhan</h2>
+  <div id="ramadhanCalendar" class="ramadhan-calendar"></div>
 </section>
 
 
