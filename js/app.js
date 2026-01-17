@@ -88,7 +88,10 @@ zakatNoteEl   = document.getElementById("zakatNote");
   transactionForm.addEventListener("submit", onSubmit);
   monthFilter.onchange = e => { selectedMonth = e.target.value; update(); };
   userFilter.onchange = e => { selectedUser = e.target.value; update(); };
-  ramadhanMode.onchange = e => { isRamadhan = e.target.checked; update(); };
+  
+  ramadhanMode.onchange = e => { isRamadhan = e.target.checked;  
+  if(isRamadhan){document.body.classList.add("ramadhan");
+  } else {document.body.classList.remove("ramadhan");}update(); };
 
   setupTheme();
   setupQuotes();
