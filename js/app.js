@@ -168,10 +168,19 @@ function renderAnalysis(){
 
   if(!expenses.length){
     analysisResult.innerHTML = "Belum ada data pengeluaran.";
+    renderAITips(0, 0, 0, "");
     return;
   }
 
-  const total = expenses.reduce((a,b)=>a+b.amount,0);
+  const totalExpense = expenses.reduce((a,b)=>a+b.amount,0);
+  const totalIncome  = filtered()
+    .filter(t=>t.type==="income")
+    .reduce((a,b)=>a+b.amount,0);
+
+  const totalSedekah = filtered()
+    .filter(t=>t.type==="sedekah")
+    .reduce((a,b)=>a+b.amount,0);
+
   const cat = {};
   expenses.forEach(t=>{
     cat[t.category] = (cat[t.category] || 0) + t.amount;
@@ -180,7 +189,7 @@ function renderAnalysis(){
   const [topCat, topVal] =
     Object.entries(cat).sort((a,b)=>b[1]-a[1])[0];
 
-  const percent = Math.round((topVal / total) * 100);
+  const percent = Math.round((topVal / totalExpense) * 100);
 
   let tip = "💡 Kelola pengeluaran dengan bijak.";
   if(percent > 50){
@@ -197,7 +206,56 @@ function renderAnalysis(){
     <strong>Terbesar:</strong> ${topCat} (${percent}%)<br>
     ${tip}
   `;
+
+  // PANGGIL AI TIPS DI SINI (BENAR)
+  renderAITips(totalIncome, totalExpense, totalSedekah, topCat);
 }
+
+function renderAITips(inc, exp, sed, topCat){
+  const el = document.getElementById("aiTips");
+  if(!el) return;
+
+  let tips = "";
+
+  // 🔴 Sedekah
+  if(sed === 0 && inc > 0){
+    tips = `
+      🕌 <b>AI Islami:</b><br>
+      Belum ada sedekah tercatat bulan ini.<br>
+      <em>“Harta tidak akan berkurang karena sedekah.”</em>
+    `;
+  }
+
+  // 🟠 Utang dominan
+  else if(topCat.toLowerCase().includes("loan")){
+    tips = `
+      ⚠️ <b>AI Islami:</b><br>
+      Utang mendominasi pengeluaran.<br>
+      <em>Islam menganjurkan hidup tanpa memberatkan diri.</em>
+    `;
+  }
+
+  // 🟢 Boros
+  else if(exp > inc * 0.8){
+    tips = `
+      ⚠️ <b>AI Islami:</b><br>
+      Pengeluaran mendekati pemasukan.<br>
+      <em>“Makan dan minumlah, tetapi jangan berlebihan.”</em>
+    `;
+  }
+
+  // 🔵 Sehat
+  else{
+    tips = `
+      ✅ <b>AI Islami:</b><br>
+      Keuangan keluarga dalam kondisi baik.<br>
+      <em>Terus jaga amanah rezeki dari Allah.</em>
+    `;
+  }
+
+  el.innerHTML = tips;
+}
+
 
 
 function renderTable(){
