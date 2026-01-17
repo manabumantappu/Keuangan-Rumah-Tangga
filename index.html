@@ -92,16 +92,15 @@
 </section>
 
   <!-- EXPORT / IMPORT DATA -->
+<!-- BACKUP DATA -->
 <section class="analysis-section">
-  <h2>📤📥 Backup Data</h2>
+  <h2>💾 Backup Data</h2>
   <p>Simpan data ke file atau pindahkan ke perangkat lain.</p>
 
-  <button class="export-btn" onclick="exportData()">⬇️ Export Data</button>
+  <button onclick="exportData()">⬇️ Export Data</button>
+  <button onclick="triggerImport()">⬆️ Import Data</button>
 
-  <label class="import-btn">
-    ⬆️ Import Data
-    <input type="file" id="importFile" accept=".json" hidden onchange="importData(event)">
-  </label>
+  <input type="file" id="importFile" accept=".json" style="display:none">
 </section>
 
   <!-- FORM -->
