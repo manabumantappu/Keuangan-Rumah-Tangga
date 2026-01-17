@@ -540,7 +540,7 @@ function loadCities(){
   await loadPrayerTimes();      // ✅ sekarang VALID
   renderRamadhanCalendar();     // tampilkan kalender
 };
-
+}
 async function loadPrayerTimes(){
   if(!selectedCityId) return;
 
