@@ -1,134 +1,129 @@
+/* =========================================================
+   KEUANGAN RUMAH TANGGA ISLAMI
+   FINAL CLEAN VERSION
+   ========================================================= */
+
+/* ===== GLOBAL DATA ===== */
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
-document.addEventListener("DOMContentLoaded", () => {
-// ===== AMBIL ELEMEN DOM (WAJIB) =====
-const transactionTable = document.getElementById("transactionTable");
-const transactionForm  = document.getElementById("transactionForm");
-
-const totalIncome   = document.getElementById("totalIncome");
-const totalExpense  = document.getElementById("totalExpense");
-const balance       = document.getElementById("balance");
-const saving        = document.getElementById("saving");
-const sedekahValue  = document.getElementById("sedekahValue");
-const zakatValue    = document.getElementById("zakatValue");
-const warningBox    = document.getElementById("warningBox");
-const analysisResult= document.getElementById("analysisResult");
-
-const monthFilter   = document.getElementById("monthFilter");
-const userFilter    = document.getElementById("userFilter");
-const ramadhanMode  = document.getElementById("ramadhanMode");
-
-const barChart      = document.getElementById("barChart");
-const pieChart      = document.getElementById("pieChart");
-
-// input form
-const date     = document.getElementById("date");
-const user     = document.getElementById("user");
-const type     = document.getElementById("type");
-const category = document.getElementById("category");
-const amount   = document.getElementById("amount");
-const note     = document.getElementById("note");
-
-
-
 let selectedMonth = "";
 let selectedUser = "all";
 let isRamadhan = false;
+let editIndex = null;
 
-function save(){ localStorage.setItem("transactions", JSON.stringify(transactions)); }
+/* ===== DOM ELEMENTS ===== */
+let transactionTable, transactionForm;
+let totalIncome, totalExpense, balance, saving;
+let sedekahValue, zakatValue, warningBox, analysisResult;
+let monthFilter, userFilter, ramadhanMode;
+let barChart, pieChart;
+let dateEl, userEl, typeEl, categoryEl, amountEl, noteEl;
 
-function filtered(){
-  return transactions.filter(t=>{
-    return (!selectedMonth || t.date.startsWith(selectedMonth)) &&
-           (selectedUser === "all" || t.user === selectedUser);
-  });
+/* ===== DOM READY ===== */
+document.addEventListener("DOMContentLoaded", init);
+
+function init() {
+  transactionTable = document.getElementById("transactionTable");
+  transactionForm  = document.getElementById("transactionForm");
+
+  totalIncome   = document.getElementById("totalIncome");
+  totalExpense  = document.getElementById("totalExpense");
+  balance       = document.getElementById("balance");
+  saving        = document.getElementById("saving");
+  sedekahValue  = document.getElementById("sedekahValue");
+  zakatValue    = document.getElementById("zakatValue");
+  warningBox    = document.getElementById("warningBox");
+  analysisResult= document.getElementById("analysisResult");
+
+  monthFilter   = document.getElementById("monthFilter");
+  userFilter    = document.getElementById("userFilter");
+  ramadhanMode  = document.getElementById("ramadhanMode");
+
+  barChart      = document.getElementById("barChart");
+  pieChart      = document.getElementById("pieChart");
+
+  dateEl     = document.getElementById("date");
+  userEl     = document.getElementById("user");
+  typeEl     = document.getElementById("type");
+  categoryEl = document.getElementById("category");
+  amountEl   = document.getElementById("amount");
+  noteEl     = document.getElementById("note");
+
+  transactionForm.addEventListener("submit", onSubmit);
+  monthFilter.onchange   = e => { selectedMonth = e.target.value; update(); };
+  userFilter.onchange    = e => { selectedUser  = e.target.value; update(); };
+  ramadhanMode.onchange  = e => { isRamadhan = e.target.checked; update(); };
+
+  setupTheme();
+  setupQuotes();
+  setupImport();
+
+  update();
 }
 
-function renderDashboard(){
+/* ===== STORAGE ===== */
+function save() {
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+}
+
+/* ===== FILTER ===== */
+function filtered() {
+  return transactions.filter(t =>
+    (!selectedMonth || t.date.startsWith(selectedMonth)) &&
+    (selectedUser === "all" || t.user === selectedUser)
+  );
+}
+
+/* ===== DASHBOARD ===== */
+function renderDashboard() {
   let inc = 0, exp = 0, sed = 0;
 
-  // hitung total
-  filtered().forEach(t=>{
-    if(t.type === "income") inc += t.amount;
-    else if(t.type === "expense") exp += t.amount;
-    else if(t.type === "sedekah") sed += t.amount;
+  filtered().forEach(t => {
+    if (t.type === "income") inc += t.amount;
+    else if (t.type === "expense") exp += t.amount;
+    else if (t.type === "sedekah") sed += t.amount;
   });
 
-  // tampilkan ringkasan
-  totalIncome.innerText = rupiah(inc);
-  totalExpense.innerText = rupiah(exp);
-  balance.innerText = rupiah(inc - exp);
-  saving.innerText = rupiah((inc - exp) * 0.2);
-  sedekahValue.innerText = rupiah(sed);
-  zakatValue.innerText = rupiah(
-    (inc - exp) >= 85000000 ? (inc - exp) * 0.025 : 0
-  );
+  totalIncome.textContent  = rupiah(inc);
+  totalExpense.textContent = rupiah(exp);
+  balance.textContent      = rupiah(inc - exp);
+  saving.textContent       = rupiah((inc - exp) * 0.2);
+  sedekahValue.textContent = rupiah(sed);
+  zakatValue.textContent   =
+    (inc - exp >= 85000000) ? rupiah((inc - exp) * 0.025) : "Rp 0";
 
-  // ===== REKOMENDASI SEDEKAH (BENAR) =====
   const persenSedekah = isRamadhan ? 0.08 : 0.05;
-  const rekomendasi = inc * persenSedekah;
+  document.getElementById("sedekahRecommend").textContent =
+    rupiah(inc * persenSedekah);
 
-  document.getElementById("sedekahRecommend").innerText =
-    rupiah(rekomendasi);
-
-  const kurang = rekomendasi - sed;
-  const note = document.getElementById("sedekahNote");
-
-  if(kurang > 0){
-    note.innerText =
-      `💡 Disarankan menambah sedekah sebesar ${rupiah(kurang)}`;
-    note.style.color = "#c62828";
-  } else {
-    note.innerText = "✅ Sedekah bulan ini sudah mencukupi";
-    note.style.color = "#0f9d58";
-  }
-// ===== PERINGATAN SEDEKAH 0 =====
-const sedekahWarningId = "sedekahWarning";
-let sedWarn = document.getElementById(sedekahWarningId);
-
-// buat elemen kalau belum ada
-if(!sedWarn){
-  sedWarn = document.createElement("div");
-  sedWarn.id = sedekahWarningId;
-  sedWarn.className = "warning";
-  sedekahValue.parentElement.appendChild(sedWarn);
-}
-
-if(inc > 0 && sed === 0){
-  sedWarn.classList.remove("hidden");
-  sedWarn.innerHTML = `
-    🕌 <strong>Belum ada sedekah</strong><br>
-    <em>"Harta tidak akan berkurang karena sedekah"</em><br>
-    (HR. Muslim)
-  `;
-} else {
-  sedWarn.classList.add("hidden");
-}
-
-  // ===== PERINGATAN BOROS =====
-  const limit = isRamadhan ? 0.7 : 0.8;
-  if(exp >= inc * limit){
+  if (exp >= inc * (isRamadhan ? 0.7 : 0.8)) {
     warningBox.classList.remove("hidden");
-    warningBox.innerText =
-      "⚠️ Pengeluaran mendekati/melewati pemasukan";
+    warningBox.textContent = "⚠️ Pengeluaran mendekati/melewati pemasukan";
   } else {
     warningBox.classList.add("hidden");
   }
 }
 
-function renderAnalysis(){
-  const exp=filtered().filter(t=>t.type==="expense");
-  if(!exp.length){analysisResult.innerHTML="Tidak ada data";return}
-  const total=exp.reduce((a,b)=>a+b.amount,0);
-  const cat={};
-  exp.forEach(t=>cat[t.category]=(cat[t.category]||0)+t.amount);
-  const [c,v]=Object.entries(cat).sort((a,b)=>b[1]-a[1])[0];
-  analysisResult.innerHTML=`Terbesar: <b>${c}</b> (${Math.round(v/total*100)}%)<br>💡 Kurangi ${c}`;
+/* ===== ANALISIS ===== */
+function renderAnalysis() {
+  const exp = filtered().filter(t => t.type === "expense");
+  if (!exp.length) {
+    analysisResult.textContent = "Tidak ada data";
+    return;
+  }
+
+  const total = exp.reduce((a,b)=>a+b.amount,0);
+  const cat = {};
+  exp.forEach(t => cat[t.category] = (cat[t.category]||0) + t.amount);
+
+  const [c,v] = Object.entries(cat).sort((a,b)=>b[1]-a[1])[0];
+  analysisResult.innerHTML =
+    `Terbesar: <b>${c}</b> (${Math.round(v/total*100)}%)<br>💡 Kurangi ${c}`;
 }
 
-function renderTable(){
+/* ===== TABLE ===== */
+function renderTable() {
   transactionTable.innerHTML = "";
-
-  filtered().forEach((t, i)=>{
+  filtered().forEach((t,i)=>{
     transactionTable.innerHTML += `
       <tr>
         <td>${t.date}</td>
@@ -138,59 +133,41 @@ function renderTable(){
         <td>${rupiah(t.amount)}</td>
         <td>${t.note}</td>
         <td>
-          <button class="edit-btn" onclick="editTransaction(${i})">✏️ Edit</button>
-          <button class="delete-btn" onclick="deleteTransaction(${i})">🗑️ Hapus</button>
+          <button onclick="editTransaction(${i})">✏️</button>
+          <button onclick="deleteTransaction(${i})">🗑️</button>
         </td>
-      </tr>
-    `;
+      </tr>`;
   });
-
-  const emptyEl = document.getElementById("emptyState");
-  if(emptyEl){
-    emptyEl.style.display = filtered().length ? "none" : "block";
-  }
 }
 
-
-
-function deleteTransaction(index){
-  const list = filtered();
-  if(!list[index]) return;
-
-  const yakin = confirm("Yakin ingin menghapus transaksi ini?");
-  if(!yakin) return;
-
-  const realIndex = transactions.indexOf(list[index]);
-  if(realIndex === -1) return;
-
-  transactions.splice(realIndex, 1);
-  save();
-  update();
-}
-
-
-let bar,pie;
-function renderCharts(){
+/* ===== CHART ===== */
+let bar, pie;
+function renderCharts() {
   let inc=0, exp=0, cat={};
   filtered().forEach(t=>{
     if(t.type==="income") inc+=t.amount;
-    if(t.type==="expense"){exp+=t.amount;cat[t.category]=(cat[t.category]||0)+t.amount}
+    if(t.type==="expense"){
+      exp+=t.amount;
+      cat[t.category]=(cat[t.category]||0)+t.amount;
+    }
   });
+
   bar?.destroy(); pie?.destroy();
-  bar=new Chart(barChart,{type:"bar",data:{labels:["Masuk","Keluar"],datasets:[{data:[inc,exp]}]}});
-  pie=new Chart(pieChart,{type:"pie",data:{labels:Object.keys(cat),datasets:[{data:Object.values(cat)}]}});
+  bar = new Chart(barChart,{type:"bar",data:{labels:["Masuk","Keluar"],datasets:[{data:[inc,exp]}]}});
+  pie = new Chart(pieChart,{type:"pie",data:{labels:Object.keys(cat),datasets:[{data:Object.values(cat)}]}});
 }
 
-transactionForm.onsubmit = e => {
+/* ===== SUBMIT ===== */
+function onSubmit(e){
   e.preventDefault();
 
   const data = {
-    date: date.value,
-    user: user.value,
-    type: type.value,
-    category: category.value,
-    amount: +amount.value,
-    note: note.value
+    date: dateEl.value,
+    user: userEl.value,
+    type: typeEl.value,
+    category: categoryEl.value,
+    amount: +amountEl.value,
+    note: noteEl.value
   };
 
   if(editIndex !== null){
@@ -203,208 +180,107 @@ transactionForm.onsubmit = e => {
   save();
   e.target.reset();
   update();
+}
+
+/* ===== UTIL ===== */
+function rupiah(n){ return "Rp " + n.toLocaleString("id-ID"); }
+function update(){
+  renderDashboard();
+  renderAnalysis();
+  renderTable();
+  renderCharts();
+}
+
+/* ===== RESET / UNDO ===== */
+window.resetData = ()=>{
+  if(!confirm("Hapus semua data?")) return;
+  localStorage.setItem("transactions_backup", JSON.stringify(transactions));
+  localStorage.removeItem("transactions");
+  location.reload();
 };
 
-
-monthFilter.onchange=e=>{selectedMonth=e.target.value;update();}
-userFilter.onchange=e=>{selectedUser=e.target.value;update();}
-ramadhanMode.onchange=e=>{isRamadhan=e.target.checked;document.body.classList.toggle("ramadhan",isRamadhan);update();}
-
-function rupiah(n){return"Rp "+n.toLocaleString("id-ID")}
-function update(){renderDashboard();renderAnalysis();renderTable();renderCharts()}
-update();
-function resetData(){
-  const yakin = confirm(
-    "⚠️ Semua data transaksi akan dihapus.\n" +
-    "Kamu masih bisa UNDO dalam beberapa menit.\n\n" +
-    "Lanjutkan?"
-  );
-
-  if(!yakin) return;
-
-  // simpan backup sementara
-  localStorage.setItem(
-    "transactions_backup",
-    localStorage.getItem("transactions")
-  );
-
-  localStorage.setItem(
-    "transactions_backup_time",
-    Date.now()
-  );
-
-  // hapus data utama
-  localStorage.removeItem("transactions");
-
-  alert("Data di-reset. Kamu bisa UNDO dalam 5 menit.");
+window.undoReset = ()=>{
+  const b = localStorage.getItem("transactions_backup");
+  if(!b) return alert("Tidak ada data");
+  localStorage.setItem("transactions", b);
   location.reload();
-}
-function undoReset(){
-  const backup = localStorage.getItem("transactions_backup");
-  const time = localStorage.getItem("transactions_backup_time");
-  
-  if(!backup || !time){
-    alert("Tidak ada data untuk di-undo.");
-    return;
-  }
-  
-   const batas = 5 * 60 * 1000; // 5 menit
-  if(Date.now() - Number(time) > batas){
-    localStorage.removeItem("transactions_backup");
-    localStorage.removeItem("transactions_backup_time");
-    alert("Waktu undo sudah habis.");
-    return;
-  }
+};
 
-  // restore data
-  localStorage.setItem("transactions", backup);
+/* ===== EXPORT / IMPORT ===== */
+window.exportData = ()=>{
+  const blob = new Blob([JSON.stringify(transactions,null,2)],{type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "keuangan-rumah-tangga.json";
+  a.click();
+};
 
-  // hapus backup
-  localStorage.removeItem("transactions_backup");
-  localStorage.removeItem("transactions_backup_time");
-  alert("Data berhasil dikembalikan.");
-  location.reload();
-  }
-  
-window.resetData = resetData;
-window.undoReset = undoReset;
-  
-const yearEl = document.getElementById("year");
-if(yearEl){
-  yearEl.innerText = new Date().getFullYear();
-}
+window.triggerImport = ()=>{
+  document.getElementById("importFile")?.click();
+};
 
-// ===== THEME TOGGLE =====
-const themeToggle = document.getElementById("themeToggle");
-const savedTheme = localStorage.getItem("theme");
+function setupImport(){
+  const input = document.getElementById("importFile");
+  if(!input) return;
 
-// load tema tersimpan
-if(savedTheme === "dark"){
-  document.body.classList.add("dark");
-  if(themeToggle) themeToggle.checked = true;
-}
-
-// toggle event
-if(themeToggle){
-  themeToggle.addEventListener("change", () => {
-    if(themeToggle.checked){
-      document.body.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      document.body.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
+  input.addEventListener("change",()=>{
+    const r = new FileReader();
+    r.onload = ()=>{
+      transactions = JSON.parse(r.result);
+      save();
+      update();
+      alert("✅ Import berhasil");
+    };
+    r.readAsText(input.files[0]);
+    input.value="";
   });
 }
-let editIndex = null;
 
-function editTransaction(index){
-  const list = filtered();
-  if(!list[index]) return;
+/* ===== EDIT / DELETE ===== */
+window.editTransaction = index=>{
+  const t = filtered()[index];
+  if(!t) return;
 
-  const t = list[index];
-
-  date.value = t.date;
-  user.value = t.user;
-  type.value = t.type;
-  category.value = t.category;
-  amount.value = t.amount;
-  note.value = t.note;
+  dateEl.value = t.date;
+  userEl.value = t.user;
+  typeEl.value = t.type;
+  categoryEl.value = t.category;
+  amountEl.value = t.amount;
+  noteEl.value = t.note;
 
   editIndex = transactions.indexOf(t);
-}
-window.editTransaction = editTransaction;
-window.deleteTransaction = deleteTransaction;
+};
 
-// ===== FOOTER AYAT / HADITS BERGANTIAN =====
-const quoteEl = document.getElementById("quoteText");
-if (quoteEl) {
-  const quotes = [
-    '“Sesungguhnya pemboros itu adalah saudara setan.” (QS. Al-Isra: 27)',
-    '“Harta tidak akan berkurang karena sedekah.” (HR. Muslim)',
-    '“Jika kamu bersyukur, niscaya Aku akan menambah (nikmat) kepadamu.” (QS. Ibrahim: 7)',
-    '“Dan apa saja yang kamu infakkan, Allah akan menggantinya.” (QS. Saba: 39)',
-    '“Sebaik-baik harta adalah yang berada di tangan orang saleh.” (HR. Ahmad)',
-    '“Barang siapa bertakwa kepada Allah, niscaya Dia akan memberinya rezeki dari arah yang tidak disangka-sangka.” (QS. At-Talaq: 2–3)',
-    '“Tangan di atas lebih baik daripada tangan di bawah.” (HR. Bukhari & Muslim)',
-    '“Tidaklah seorang hamba bersedekah dengan sesuatu, melainkan Allah akan menggantinya.” (HR. Ahmad)',
-    '“Makan dan minumlah, tetapi jangan berlebihan.” (QS. Al-A’raf: 31)',
-    '“Sesungguhnya Allah mencintai jika seseorang bekerja, ia menyempurnakannya.” (HR. Thabrani)',
-    '“Orang yang memberi nafkah kepada keluarganya dengan niat karena Allah, maka itu adalah sedekah.” (HR. Bukhari)',
-    '“Harta dan anak-anak adalah perhiasan dunia, tetapi amal saleh lebih baik pahalanya.” (QS. Al-Kahfi: 46)',
-    '“Sebaik-baik dinar adalah yang dinafkahkan untuk keluarganya.” (HR. Muslim)',
-    '“Perumpamaan orang yang berinfak di jalan Allah seperti sebutir biji yang menumbuhkan tujuh tangkai.” (QS. Al-Baqarah: 261)',
-    '“Tidak ada satu hari pun ketika hamba berada di pagi hari, melainkan ada dua malaikat yang turun.” (HR. Bukhari)'
-  ];
+window.deleteTransaction = index=>{
+  const t = filtered()[index];
+  transactions.splice(transactions.indexOf(t),1);
+  save();
+  update();
+};
 
-  let i = 0;
-  quoteEl.innerText = quotes[i];
-
-  setInterval(() => {
-    i = (i + 1) % quotes.length;
-    quoteEl.innerText = quotes[i];
-  }, 10000);
-}
-
-
-/* ===============================
-   EXPORT / IMPORT DATA (FINAL)
-================================ */
-
-function exportData(){
-  try{
-    const data = JSON.stringify(transactions, null, 2);
-    const blob = new Blob([data], { type: "application/json" });
-
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "keuangan-rumah-tangga.json";
-    document.body.appendChild(a);
-    a.click();
-
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }catch(e){
-    alert("❌ Gagal export data");
-    console.error(e);
+/* ===== THEME ===== */
+function setupTheme(){
+  const toggle = document.getElementById("themeToggle");
+  if(localStorage.getItem("theme")==="dark"){
+    document.body.classList.add("dark");
+    if(toggle) toggle.checked=true;
   }
-}
-
-function triggerImport(){
-  const input = document.getElementById("importFile");
-  if(input) input.click();
-}
-
-const importInput = document.getElementById("importFile");
-if(importInput){
-  importInput.addEventListener("change", function(){
-    const file = this.files[0];
-    if(!file) return;
-
-    const reader = new FileReader();
-    reader.onload = function(){
-      try{
-        const parsed = JSON.parse(reader.result);
-
-        if(!Array.isArray(parsed)){
-          alert("❌ File tidak valid");
-          return;
-        }
-
-        transactions = parsed;
-        save();
-        update();
-
-        alert("✅ Data berhasil diimport");
-      }catch(err){
-        alert("❌ Gagal membaca file");
-      }
-    };
-
-    reader.readAsText(file);
-    this.value = "";
+  toggle?.addEventListener("change",()=>{
+    document.body.classList.toggle("dark");
+    localStorage.setItem("theme",toggle.checked?"dark":"light");
   });
 }
 
-
+/* ===== QUOTES ===== */
+function setupQuotes(){
+  const q = document.getElementById("quoteText");
+  if(!q) return;
+  const arr=[
+    "Harta tidak akan berkurang karena sedekah.",
+    "Sesungguhnya pemboros adalah saudara setan.",
+    "Jika kamu bersyukur niscaya Aku tambah nikmat."
+  ];
+  let i=0;
+  q.textContent=arr[i];
+  setInterval(()=>{i=(i+1)%arr.length;q.textContent=arr[i];},10000);
+}
