@@ -495,34 +495,27 @@ function showRamadhanReminder(){
 }
 function loadCities(){
   const cities = [
-    {id:"1301", lokasi:"Jakarta"},
+   {id:"1301", lokasi:"Jakarta"},
     {id:"3273", lokasi:"Bandung"},
     {id:"3578", lokasi:"Surabaya"},
     {id:"3374", lokasi:"Semarang"},
-    {id:"5171", lokasi:"Denpasar"},
-    {id:"7371", lokasi:"Makassar"},
-    {id:"6471", lokasi:"Balikpapan"},
-    {id:"6171", lokasi:"Pontianak"},
+    {id:"3471", lokasi:"Yogyakarta"},
+    {id:"3372", lokasi:"Surakarta (Solo)"},
+    {id:"3271", lokasi:"Bogor"},
     {id:"3173", lokasi:"Depok"},
     {id:"3671", lokasi:"Tangerang"},
-    {id:"3271", lokasi:"Bogor"},
-    {id:"3273", lokasi:"Bandung"},
-    {id:"3374", lokasi:"Semarang"},
-    {id:"3578", lokasi:"Surabaya"},
     {id:"3274", lokasi:"Cimahi"},
     {id:"3275", lokasi:"Tasikmalaya"},
     {id:"3209", lokasi:"Cirebon"},
     {id:"3217", lokasi:"Indramayu"},
     {id:"3210", lokasi:"Majalengka"},
     {id:"3211", lokasi:"Sumedang"},
+    {id:"3276", lokasi:"Banjar"},
+    {id:"3272", lokasi:"Sukabumi"},
     {id:"5171", lokasi:"Denpasar"},
     {id:"7371", lokasi:"Makassar"},
     {id:"6471", lokasi:"Balikpapan"},
-    {id:"6171", lokasi:"Pontianak"},
-    {id:"3471", lokasi:"Yogyakarta"},
-    {id:"3372", lokasi:"Surakarta (Solo)"},
-    {id:"3276", lokasi:"Banjar"},
-    {id:"3272", lokasi:"Sukabumi"}
+    {id:"6171", lokasi:"Pontianak"}
   ];
 
   const select = document.getElementById("citySelect");
@@ -540,13 +533,13 @@ function loadCities(){
     selectedCityId = saved;
   }
 
-  select.onchange = () => {
-    selectedCityId = select.value;
-    localStorage.setItem("cityId", selectedCityId);
-    await loadPrayerTimes();      // ambil jadwal
-    renderRamadhanCalendar();
-  };
-}
+ select.onchange = async () => {
+  selectedCityId = select.value;
+  localStorage.setItem("cityId", selectedCityId);
+
+  await loadPrayerTimes();      // ✅ sekarang VALID
+  renderRamadhanCalendar();     // tampilkan kalender
+};
 
 async function loadPrayerTimes(){
   if(!selectedCityId) return;
