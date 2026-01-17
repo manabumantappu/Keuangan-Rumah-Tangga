@@ -345,66 +345,67 @@ if (quoteEl) {
   }, 10000);
 }
 
-// ===== EXPORT DATA =====
+
+/* ===============================
+   EXPORT / IMPORT DATA (FINAL)
+================================ */
+
 function exportData(){
-  const data = {
-    transactions: transactions,
-    exportedAt: new Date().toISOString()
-  };
+  try{
+    const data = JSON.stringify(transactions, null, 2);
+    const blob = new Blob([data], { type: "application/json" });
 
-  const blob = new Blob(
-    [JSON.stringify(data, null, 2)],
-    { type: "application/json" }
-  );
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "keuangan-rumah-tangga.json";
+    document.body.appendChild(a);
+    a.click();
 
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "keuangan-rumah-tangga.json";
-  a.click();
-
-  URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }catch(e){
+    alert("❌ Gagal export data");
+    console.error(e);
+  }
 }
-// ===== IMPORT DATA =====
-function importData(event){
-  const file = event.target.files[0];
-  if(!file) return;
 
-  const reader = new FileReader();
+function triggerImport(){
+  const input = document.getElementById("importFile");
+  if(input) input.click();
+}
 
-  reader.onload = e => {
-    try {
-      const json = JSON.parse(e.target.result);
+document.addEventListener("DOMContentLoaded", ()=>{
+  const importInput = document.getElementById("importFile");
+  if(!importInput) return;
 
-      if(!Array.isArray(json.transactions)){
-        alert("❌ File tidak valid");
-        return;
+  importInput.addEventListener("change", function(){
+    const file = this.files[0];
+    if(!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(){
+      try{
+        const parsed = JSON.parse(reader.result);
+
+        if(!Array.isArray(parsed)){
+          alert("❌ File tidak valid");
+          return;
+        }
+
+        transactions = parsed;
+        save();
+        update();
+
+        alert("✅ Data berhasil diimport");
+      }catch(err){
+        alert("❌ Gagal membaca file");
+        console.error(err);
       }
+    };
 
-      const yakin = confirm(
-        "⚠️ Import data akan MENIMPA data saat ini.\n\nLanjutkan?"
-      );
-      if(!yakin) return;
-
-      transactions = json.transactions;
-      localStorage.setItem("transactions", JSON.stringify(transactions));
-
-      alert("✅ Data berhasil di-import");
-      location.reload();
-
-    } catch(err){
-      alert("❌ Gagal membaca file");
-    }
-  };
-
-  reader.readAsText(file);
-}
-const compactToggle = document.getElementById("compactMode");
-if(compactToggle){
-  compactToggle.onchange = () => {
-    document.body.classList.toggle("compact", compactToggle.checked);
-  };
-}
-
+    reader.readAsText(file);
+    this.value = ""; // reset input
+  });
 });
 
