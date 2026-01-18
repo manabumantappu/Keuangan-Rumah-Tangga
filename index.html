@@ -194,57 +194,6 @@
     <div class="chart-card"><canvas id="pieChart"></canvas></div>
   </section>
 
-   <!-- ============================= -->
-<!-- 🌙 BLOK RAMADHAN -->
-<!-- ============================= -->
-<!-- ===================== -->
-<!-- 🌙 BLOK RAMADHAN -->
-<!-- ===================== -->
-<section class="ramadhan-wrapper">
-
-  <h2 class="ramadhan-title">🌙 Ramadhan</h2>
-
-  <div class="ramadhan-grid">
-
-    <!-- Pengaturan -->
-    <div class="ramadhan-card">
-      <h3>🗓️ Pengaturan Ramadhan</h3>
-
-      <div class="ramadhan-input">
-        <label>
-          Tanggal Mulai
-          <input type="date" id="ramadhanStart">
-        </label>
-
-        <label>
-          Tanggal Akhir
-          <input type="date" id="ramadhanEnd">
-        </label>
-      </div>
-
-      <p class="hint">
-        Digunakan untuk reminder otomatis, sedekah & zakat Ramadhan
-      </p>
-    </div>
-
-    <!-- Kota -->
-    <div class="ramadhan-card">
-      <h3>📍 Kota Jadwal Puasa</h3>
-      <select id="citySelect"></select>
-      <p class="hint">Jadwal sahur & buka mengikuti Kemenag RI</p>
-    </div>
-
-    <!-- Kalender -->
-    <div class="ramadhan-card kalender">
-      <h3 id="judulKalender">📅 Kalender Ramadhan</h3>
-
-      <div class="ramadhan-scroll">
-        <div id="kalender-ramadhan"></div>
-      </div>
-    </div>
-
-  </div>
-</section>
   
 </main>
   
@@ -281,47 +230,7 @@
   </div>
 </footer>
 
-<script>
-function renderKalenderRamadhan() {
-  const startVal = document.getElementById("ramadhanStart")?.value;
-  const endVal = document.getElementById("ramadhanEnd")?.value;
-  const kalender = document.getElementById("kalender-ramadhan");
 
-  if (!startVal || !endVal || !kalender) return;
-
-  kalender.innerHTML = "";
-
-  const startDate = new Date(startVal);
-  const endDate = new Date(endVal);
-
-  let hari = 1;
-
-  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-    const item = document.createElement("div");
-    item.className = "hari";
-
-    item.innerHTML = `
-      <strong>Hari ${hari}</strong>
-      <span>${d.toLocaleDateString("id-ID", {
-        weekday: "short",
-        day: "2-digit",
-        month: "short"
-      })}</span>
-    `;
-
-    kalender.appendChild(item);
-    hari++;
-  }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  renderKalenderRamadhan();
-
-  ["ramadhanStart", "ramadhanEnd"].forEach(id => {
-    document.getElementById(id)?.addEventListener("change", renderKalenderRamadhan);
-  });
-});
-</script>
 
 
 </body>
