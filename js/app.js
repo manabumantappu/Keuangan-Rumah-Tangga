@@ -574,7 +574,7 @@ async function loadPrayerTimes(){
   }
 }
 async function renderRamadhanCalendar(){
-  const container = document.getElementById("ramadhanCalendar");
+ const container = document.getElementById("kalender-ramadhan");
  if(!container || !ramadhanStartDate){
   container.innerHTML = "⚠️ Silakan set Tanggal Mulai Ramadhan terlebih dahulu";
   return;
@@ -586,6 +586,9 @@ async function renderRamadhanCalendar(){
   for(let i=0;i<30;i++){
     const d = new Date(start);
     d.setDate(start.getDate()+i);
+
+  const isToday =
+  d.toDateString() === new Date().toDateString();
 
  // ⬅️ FORMAT UNTUK API (WAJIB)
 const apiDate = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")}`;
