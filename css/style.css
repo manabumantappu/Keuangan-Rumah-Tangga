@@ -61,8 +61,7 @@ body.ramadhan{background:linear-gradient(135deg,#1b5e20,#004d40)}
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  margin-left: 10px;
-}
+ }
 
 .undo-btn:hover {
   background: #0d47a1;
@@ -620,6 +619,17 @@ body.compact .dashboard {
 
 body.compact .container {
   padding-bottom: 120px;
+}
+/* ===== RESET & UNDO BUTTON FIX ===== */
+.reset-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;        /* jarak ideal */
+  margin-top: 12px;
+}
+
+.reset-buttons button {
+  width: 100%;     /* sejajar rapi */
 }
 
 
