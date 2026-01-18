@@ -527,23 +527,73 @@ button,
     padding-bottom: 70px;
   }
 }
-body.compact table,
+/* =========================
+   📱 COMPACT MODE (FINAL)
+========================= */
+
+body.compact {
+  font-size: 14px;
+}
+
+/* Header */
+body.compact header {
+  padding: 16px 10px;
+}
+body.compact header h1 {
+  font-size: 1.15rem;
+}
+
+/* Dashboard: 2 kolom di HP */
+body.compact .dashboard {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+/* Card diperkecil */
+body.compact .card {
+  padding: 10px;
+  border-radius: 12px;
+}
+body.compact .card h3 {
+  font-size: 0.8rem;
+}
+body.compact .card p {
+  font-size: 0.95rem;
+}
+
+/* Section lebih rapat */
+body.compact .analysis-section,
+body.compact .form-section,
+body.compact .filter-section {
+  padding: 12px;
+  margin-top: 12px;
+}
+
+/* Table tetap ADA tapi padat */
+body.compact table th,
+body.compact table td {
+  padding: 6px;
+  font-size: 0.75rem;
+}
+
+/* Tombol kecil */
+body.compact button,
+body.compact .edit-btn,
+body.compact .delete-btn {
+  padding: 6px 8px;
+  font-size: 0.75rem;
+}
+
+/* Chart disembunyikan (boleh) */
 body.compact .chart-section {
   display: none;
 }
 
-body.compact .dashboard {
-  grid-template-columns: 1fr;
-}
-table {
-  -webkit-overflow-scrolling: touch;
+/* Floating Button lebih kecil */
+body.compact .fab {
+  width: 44px;
+  height: 44px;
+  font-size: 22px;
 }
 
-.card .hint {
-  display: block;
-  margin-top: 8px;
-  font-size: 12px;
-  color: #2e7d32;
-  opacity: 0.85;
-}
 
