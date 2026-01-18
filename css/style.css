@@ -595,5 +595,31 @@ body.compact .fab {
   height: 44px;
   font-size: 22px;
 }
+/* ===== COMPACT MODE FINAL (HP FOCUS) ===== */
+body.compact section.chart-section,
+body.compact section:has(table),
+body.compact h2:has(+ table) {
+  display: none;
+}
+
+/* Sembunyikan judul Riwayat */
+body.compact h2 {
+  display: none;
+}
+
+/* Tetap tampilkan judul penting */
+body.compact .form-section h2,
+body.compact .filter-section h2 {
+  display: block;
+}
+
+/* Fokus dashboard & form */
+body.compact .dashboard {
+  grid-template-columns: 1fr;
+}
+
+body.compact .container {
+  padding-bottom: 120px;
+}
 
 
