@@ -16,7 +16,7 @@ let transactionForm, transactionTable;
 let dateEl, userEl, typeEl, categoryEl, amountEl, noteEl;
 let totalIncome, totalExpense, balance, saving;
 let sedekahValue, zakatValue, analysisResult, warningBox;
-let monthFilter, userFilter, ramadhanMode;
+let monthFilter, userFilter;
 let barCanvas, pieCanvas;
 let barChart, pieChart;
 let zakatIncomeEl, zakatMaalEl, zakatNoteEl;
@@ -25,12 +25,6 @@ let zakatIncomeEl, zakatMaalEl, zakatNoteEl;
 document.addEventListener("DOMContentLoaded", init);
 
 function init(){
-
-ramadhanEndInput.onchange = () => {
-  localStorage.setItem("ramadhanEnd", ramadhanEndInput.value);
-  ramadhanEndDate = ramadhanEndInput.value;
-  checkRamadhanAuto();
-};
 
    // FORM
   transactionForm = document.getElementById("transactionForm");
@@ -58,7 +52,7 @@ zakatNoteEl   = document.getElementById("zakatNote");
   // FILTER
   monthFilter = document.getElementById("monthFilter");
   userFilter = document.getElementById("userFilter");
-  ramadhanMode = document.getElementById("ramadhanMode");
+
 
   // CHART
   barCanvas = document.getElementById("barChart");
@@ -69,15 +63,12 @@ zakatNoteEl   = document.getElementById("zakatNote");
   monthFilter.onchange = e => { selectedMonth = e.target.value; update(); };
   userFilter.onchange = e => { selectedUser = e.target.value; update(); };
   
-  ramadhanMode.onchange = e => { isRamadhan = e.target.checked;  
-  if(isRamadhan){document.body.classList.add("ramadhan");
-  } else {document.body.classList.remove("ramadhan");}update(); };
-
+ 
   setupTheme();
   setupQuotes();
   setupImport();
   update();
- 
+ }
 
 /* ===== CORE ===== */
 function onSubmit(e){
@@ -185,8 +176,7 @@ if(zakatNoteEl){
   // ===== REKOMENDASI SEDEKAH =====
   const rekomEl = document.getElementById("sedekahRecommend");
   const noteEl  = document.getElementById("sedekahNote");
-
-  const persen = isRamadhan ? 0.08 : 0.05;
+  const persen = 0.05; // 5% rekomendasi sedekah
   const rekom  = inc * persen;
 
   if(rekomEl) rekomEl.textContent = rupiah(rekom);
