@@ -202,52 +202,54 @@
 <!-- 🌙 BLOK RAMADHAN -->
 <!-- ============================= -->
 <section class="ramadhan-wrapper">
- <h2 class="ramadhan-title">🌙 Ramadhan</h2>
-  
+  <h2 class="ramadhan-title">🌙 Ramadhan</h2>
+
   <div class="ramadhan-grid">
-    
-  <!-- PENGATURAN RAMADHAN -->
-  <div class="ramadhan-card">
-    <h3>🗓️ Pengaturan Ramadhan</h3>
 
-    <div class="ramadhan-input">
-      <label>
-        Tanggal Mulai
-        <input type="date" id="ramadhanStart" value="2026-02-18">
-      </label>
+    <!-- PENGATURAN RAMADHAN -->
+    <div class="ramadhan-card">
+      <h3>🗓️ Pengaturan Ramadhan</h3>
 
-      <label>
-        Tanggal Akhir
-        <input type="date" id="ramadhanEnd" value="2026-03-19">
-      </label>
+      <div class="ramadhan-input">
+        <label>
+          Tanggal Mulai
+          <input type="date" id="ramadhanStart" value="2026-02-18">
+        </label>
+
+        <label>
+          Tanggal Akhir
+          <input type="date" id="ramadhanEnd" value="2026-03-19">
+        </label>
+      </div>
+
+      <p class="hint">
+        Digunakan untuk reminder otomatis, sedekah & zakat Ramadhan
+      </p>
     </div>
 
-    <p class="hint">
-      Digunakan untuk reminder otomatis, sedekah & zakat Ramadhan
-    </p>
-  </div>
+    <!-- KOTA JADWAL PUASA -->
+    <div class="ramadhan-card">
+      <h3>📍 Kota Jadwal Puasa</h3>
 
-  <!-- KOTA JADWAL PUASA -->
-  <div class="ramadhan-card">
-    <h3>📍 Kota Jadwal Puasa</h3>
+      <select id="citySelect">
+        <option value="">-- Pilih Kota --</option>
+      </select>
 
-    <select id="citySelect">
-      <option value="">-- Pilih Kota --</option>
-      <!-- option kota dari app.js / manual -->
-    </select>
+      <p class="hint">
+        Jadwal sahur & buka mengikuti Kemenag RI
+      </p>
+    </div>
 
-    <p class="hint">
-      Jadwal sahur & buka mengikuti Kemenag RI
-    </p>
-  </div>
+    <!-- KALENDER RAMADHAN -->
+    <div class="ramadhan-card kalender">
+      <h3 id="judulKalender">📅 Kalender Ramadhan</h3>
+      <div id="kalender-ramadhan" class="kalender"></div>
+    </div>
 
-  <!-- KALENDER RAMADHAN -->
-  <div class="ramadhan-card">
-    <h3 id="judulKalender">📅 Kalender Ramadhan</h3>
-    <div id="kalender-ramadhan" class="kalender"></div>
-  </div>
+  </div> <!-- ✅ INI YANG TADI KURANG -->
 
 </section>
+
   
 <!-- Floating Button “+ Transaksi” (WAJIB)(HP Only) -->
 <button class="fab" onclick="document.getElementById('transactionForm').scrollIntoView({behavior:'smooth'})">
