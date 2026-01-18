@@ -269,7 +269,9 @@
 function renderKalenderRamadhan() {
   const startVal = document.getElementById("ramadhanStart").value;
   const endVal = document.getElementById("ramadhanEnd").value;
-  const kota = document.getElementById("citySelect").value;
+  
+ const citySelect = document.getElementById("citySelect");
+ const kota = citySelect.selectedOptions[0]?.text || "";
 
   const judul = document.getElementById("judulKalender");
 judul.textContent = kota
