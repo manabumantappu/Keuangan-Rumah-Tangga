@@ -197,24 +197,28 @@
    <!-- ============================= -->
 <!-- 🌙 BLOK RAMADHAN -->
 <!-- ============================= -->
+<!-- ===================== -->
+<!-- 🌙 BLOK RAMADHAN -->
+<!-- ===================== -->
 <section class="ramadhan-wrapper">
+
   <h2 class="ramadhan-title">🌙 Ramadhan</h2>
 
   <div class="ramadhan-grid">
 
-    <!-- PENGATURAN RAMADHAN -->
+    <!-- Pengaturan -->
     <div class="ramadhan-card">
       <h3>🗓️ Pengaturan Ramadhan</h3>
 
       <div class="ramadhan-input">
         <label>
           Tanggal Mulai
-          <input type="date" id="ramadhanStart" value="2026-02-18">
+          <input type="date" id="ramadhanStart">
         </label>
 
         <label>
           Tanggal Akhir
-          <input type="date" id="ramadhanEnd" value="2026-03-19">
+          <input type="date" id="ramadhanEnd">
         </label>
       </div>
 
@@ -223,28 +227,23 @@
       </p>
     </div>
 
-    <!-- KOTA JADWAL PUASA -->
+    <!-- Kota -->
     <div class="ramadhan-card">
       <h3>📍 Kota Jadwal Puasa</h3>
-
-      <select id="citySelect">
-        <option value="">-- Pilih Kota --</option>
-      </select>
-
-      <p class="hint">
-        Jadwal sahur & buka mengikuti Kemenag RI
-      </p>
+      <select id="citySelect"></select>
+      <p class="hint">Jadwal sahur & buka mengikuti Kemenag RI</p>
     </div>
 
-   <!-- KALENDER RAMADHAN -->
-<div class="ramadhan-card kalender">
-  <h3 id="judulKalender">📅 Kalender Ramadhan</h3>
-  <div id="kalender-ramadhan" class="ramadhan-grid"></div>
-</div>
+    <!-- Kalender -->
+    <div class="ramadhan-card kalender">
+      <h3 id="judulKalender">📅 Kalender Ramadhan</h3>
 
+      <div class="ramadhan-scroll">
+        <div id="kalender-ramadhan"></div>
+      </div>
+    </div>
 
-  </div> <!-- ✅ INI YANG TADI KURANG -->
-
+  </div>
 </section>
   
 </main>
