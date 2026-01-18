@@ -50,6 +50,11 @@ ramadhanStartInput.onchange = () => {
 
   checkRamadhanAuto();
   renderRamadhanCalendar(); // ⬅️ PENTING
+  renderKalenderRamadhanSimple();
+
+   document.getElementById("ramadhanStart")
+  ?.addEventListener("change", renderKalenderRamadhanSimple);
+
 };
 
 
@@ -641,4 +646,37 @@ async function getPrayerTimesByDate(date){
 
   localStorage.setItem(cacheKey, JSON.stringify(times));
   return times;
+}
+function renderKalenderRamadhanSimple(){
+  const kalender = document.getElementById("kalender-ramadhan");
+  const startInput = document.getElementById("ramadhanStart");
+
+  if(!kalender || !startInput || !startInput.value){
+    return;
+  }
+
+  kalender.innerHTML = "";
+
+  const startDate = new Date(startInput.value);
+  let hari = 1;
+
+  for(let i = 0; i < 30; i++){
+    const d = new Date(startDate);
+    d.setDate(startDate.getDate() + i);
+
+    const hariNama = d.toLocaleDateString("id-ID", { weekday: "short" });
+    const tgl = d.toLocaleDateString("id-ID", {
+      day: "2-digit",
+      month: "short"
+    });
+
+    kalender.innerHTML += `
+      <div class="ramadhan-day">
+        <h4>Hari ke-${hari}</h4>
+        <span>${hariNama}, ${tgl}</span>
+      </div>
+    `;
+
+    hari++;
+  }
 }
