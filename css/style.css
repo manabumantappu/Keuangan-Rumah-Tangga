@@ -622,7 +622,7 @@ body.dark .ramadhan-day{
 }
 
 /* ============================= */
-/* 🌙 BLOK RAMADHAN - FIX LAYOUT */
+/* 🌙 BLOK RAMADHAN - FINAL FIX */
 /* ============================= */
 
 .ramadhan-wrapper {
@@ -634,22 +634,17 @@ body.dark .ramadhan-day{
   box-shadow: 0 12px 28px rgba(0,0,0,0.18);
 }
 
-/* judul */
+/* judul full width */
 .ramadhan-title {
   font-size: 24px;
   margin-bottom: 24px;
 }
 
-/* grid card */
-.ramadhan-wrapper {
+/* grid khusus isi */
+.ramadhan-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 20px;
-}
-
-/* kalender full width */
-.ramadhan-card:last-child {
-  grid-column: span 2;
 }
 
 /* card */
@@ -659,13 +654,18 @@ body.dark .ramadhan-day{
   padding: 20px;
 }
 
+/* kalender full width */
+.ramadhan-card.kalender {
+  grid-column: span 2;
+}
+
 /* responsive HP */
 @media (max-width: 768px) {
-  .ramadhan-wrapper {
+  .ramadhan-grid {
     grid-template-columns: 1fr;
   }
 
-  .ramadhan-card:last-child {
+  .ramadhan-card.kalender {
     grid-column: span 1;
   }
 }
