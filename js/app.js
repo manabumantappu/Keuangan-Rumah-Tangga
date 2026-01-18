@@ -17,9 +17,11 @@ let dateEl, userEl, typeEl, categoryEl, amountEl, noteEl;
 let totalIncome, totalExpense, balance, saving;
 let sedekahValue, zakatValue, analysisResult, warningBox;
 let monthFilter, userFilter;
+let compactToggle;
 let barCanvas, pieCanvas;
 let barChart, pieChart;
 let zakatIncomeEl, zakatMaalEl, zakatNoteEl;
+
 
 /* ===== INIT ===== */
 document.addEventListener("DOMContentLoaded", init);
@@ -52,6 +54,24 @@ zakatNoteEl   = document.getElementById("zakatNote");
   // FILTER
   monthFilter = document.getElementById("monthFilter");
   userFilter = document.getElementById("userFilter");
+// ===== COMPACT MODE =====
+compactToggle = document.getElementById("compactMode");
+
+// load state dari storage
+if (localStorage.getItem("compactMode") === "on") {
+  document.body.classList.add("compact");
+  if (compactToggle) compactToggle.checked = true;
+}
+
+// toggle event
+compactToggle?.addEventListener("change", () => {
+  document.body.classList.toggle("compact");
+
+  localStorage.setItem(
+    "compactMode",
+    compactToggle.checked ? "on" : "off"
+  );
+});
 
 
   // CHART
@@ -62,7 +82,7 @@ zakatNoteEl   = document.getElementById("zakatNote");
   transactionForm.addEventListener("submit", onSubmit);
   monthFilter.onchange = e => { selectedMonth = e.target.value; update(); };
   userFilter.onchange = e => { selectedUser = e.target.value; update(); };
-  
+
  
   setupTheme();
   setupQuotes();
