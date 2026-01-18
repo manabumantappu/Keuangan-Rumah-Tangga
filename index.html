@@ -88,12 +88,12 @@
 
   <label>
     Tanggal Mulai Ramadhan:
-    <input type="date" id="ramadhanStart">
+    <input type="date" id="ramadhanStart" value="2026-02-12">
   </label>
 
   <label>
     Tanggal Akhir Ramadhan:
-    <input type="date" id="ramadhanEnd">
+   <input type="date" id="ramadhanEnd" value="2026-03-13">
   </label>
 
   <p class="hint">
@@ -266,34 +266,54 @@
 </footer>
 
 <script>
-function buatKalenderRamadhan() {
-  const mulai = new Date("2026-02-18");
-  const akhir = new Date("2026-03-19");
-  const kalender = document.getElementById("kalender-ramadhan");
+function renderKalenderRamadhan() {
+  const startVal = document.getElementById("ramadhanStart").value;
+  const endVal = document.getElementById("ramadhanEnd").value;
+  const kota = document.getElementById("citySelect").value;
 
+  if (!startVal || !endVal) return;
+
+  const startDate = new Date(startVal);
+  const endDate = new Date(endVal);
+
+  const kalender = document.getElementById("kalender-ramadhan");
   kalender.innerHTML = "";
 
-  let hariKe = 1;
-  for (let tgl = new Date(mulai); tgl <= akhir; tgl.setDate(tgl.getDate() + 1)) {
-    const div = document.createElement("div");
-    div.className = "hari";
+  let hari = 1;
 
-    div.innerHTML = `
-      <strong>Hari ${hariKe}</strong>
-      <span>${tgl.toLocaleDateString("id-ID", {
+  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
+    const item = document.createElement("div");
+    item.className = "hari";
+
+    item.innerHTML = `
+      <strong>Hari ${hari}</strong>
+      <span>${d.toLocaleDateString("id-ID", {
         weekday: "short",
         day: "2-digit",
         month: "short"
       })}</span>
+      <small style="display:block;margin-top:4px;color:#777">
+        ${kota ? "📍 " + kota : ""}
+      </small>
     `;
 
-    kalender.appendChild(div);
-    hariKe++;
+    kalender.appendChild(item);
+    hari++;
   }
 }
 
-document.addEventListener("DOMContentLoaded", buatKalenderRamadhan);
+document.addEventListener("DOMContentLoaded", () => {
+  // LISTENER
+  ["ramadhanStart", "ramadhanEnd", "citySelect"].forEach(id => {
+    document.getElementById(id).addEventListener("change", renderKalenderRamadhan);
+  });
+
+  // 🔥 INI KUNCI UTAMA
+  renderKalenderRamadhan();
+});
 </script>
+
+
 
 
 
