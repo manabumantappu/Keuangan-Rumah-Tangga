@@ -49,7 +49,6 @@ ramadhanStartInput.onchange = () => {
   localStorage.setItem("ramadhanStart", val);
 
   checkRamadhanAuto();
-  renderRamadhanCalendar(); // ⬅️ PENTING
   renderKalenderRamadhanSimple();
 
    document.getElementById("ramadhanStart")
