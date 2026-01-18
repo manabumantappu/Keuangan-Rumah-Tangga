@@ -271,6 +271,11 @@ function renderKalenderRamadhan() {
   const endVal = document.getElementById("ramadhanEnd").value;
   const kota = document.getElementById("citySelect").value;
 
+  const judul = document.getElementById("judulKalender");
+judul.textContent = kota
+  ? `📅 Kalender Ramadhan — ${kota}`
+  : "📅 Kalender Ramadhan";
+
   if (!startVal || !endVal) return;
 
   const startDate = new Date(startVal);
