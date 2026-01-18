@@ -574,47 +574,54 @@ async function loadPrayerTimes(){
   }
 }
 async function renderRamadhanCalendar(){
- const container = document.getElementById("kalender-ramadhan");
- if(!container || !ramadhanStartDate){
-  container.innerHTML = "⚠️ Silakan set Tanggal Mulai Ramadhan terlebih dahulu";
-  return;
-}
+  const container = document.getElementById("kalender-ramadhan");
+  if(!container || !ramadhanStartDate){
+    container.innerHTML = "⚠️ Silakan set Tanggal Mulai Ramadhan";
+    return;
+  }
+
   const start = new Date(ramadhanStartDate);
-  const today = new Date();
+  const cityName =
+    document.querySelector("#citySelect option:checked")?.textContent || "";
+
+  // Judul kalender (kota 1x saja)
+  const title = document.getElementById("judulKalender");
+  if(title && cityName){
+    title.textContent = `📅 Kalender Ramadhan – ${cityName}`;
+  }
+
   let html = "";
 
   for(let i=0;i<30;i++){
     const d = new Date(start);
     d.setDate(start.getDate()+i);
 
-  const isToday =
-  d.toDateString() === new Date().toDateString();
+    const isToday =
+      d.toDateString() === new Date().toDateString();
 
- // ⬅️ FORMAT UNTUK API (WAJIB)
-const apiDate = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")}`;
+    const apiDate = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")}`;
 
-// ⬅️ FORMAT UNTUK TAMPILAN (INDONESIA)
-const displayDate = d.toLocaleDateString("id-ID", {
-  day:"2-digit",
-  month:"long",
-  year:"numeric"
-});
+    const displayDate = d.toLocaleDateString("id-ID", {
+      weekday:"short",
+      day:"2-digit",
+      month:"short"
+    });
 
-const times = await getPrayerTimesByDate(apiDate);
+    const times = await getPrayerTimesByDate(apiDate);
 
-html += `
-  <div class="ramadhan-day ${isToday ? "today" : ""}">
-    <h4>Hari ke-${i+1} • ${displayDate}</h4>
-    🌙 Sahur : ${times.imsak}<br>
-    🕰️ Imsak : ${times.imsak}<br>
-    🌅 Buka  : ${times.maghrib}
-  </div>
-`;
-
+    html += `
+      <div class="ramadhan-day ${isToday ? "today" : ""}">
+        <h4>Hari ${i+1}</h4>
+        <strong>${displayDate}</strong><br>
+        🌙 Sahur: ${times.imsak}<br>
+        🌅 Buka: ${times.maghrib}
+      </div>
+    `;
   }
 
   container.innerHTML = html;
 }
+
 async function getPrayerTimesByDate(date){
  const cityId = localStorage.getItem("cityId") || "1301";
  const cacheKey = `pray_${cityId}_${date}`;
