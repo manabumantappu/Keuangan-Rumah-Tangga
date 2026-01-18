@@ -528,102 +528,67 @@ function loadCities(){
     {id:"6171", lokasi:"Pontianak"}
   ];
 
-  const select = document.getElementById("citySelect");
-  if(!select) return;
+ const select = document.getElementById("citySelect");
 
-  select.innerHTML =
-    `<option value="">-- Pilih Kota --</option>` +
-    cities.map(c =>
-      `<option value="${c.id}">${c.lokasi}</option>`
-    ).join("");
+  select.innerHTML = cities.map(c =>
+    `<option value="${c.id}">${c.lokasi}</option>`
+  ).join("");
 
   const saved = localStorage.getItem("cityId");
   if(saved){
     select.value = saved;
     selectedCityId = saved;
+  } else {
+    selectedCityId = cities[0].id;
   }
 
- select.onchange = async () => {
-  selectedCityId = select.value;
-  localStorage.setItem("cityId", selectedCityId);
-
-  await loadPrayerTimes();      // ✅ sekarang VALID
-  renderRamadhanCalendar();     // tampilkan kalender
-};
+  select.onchange = () => {
+    selectedCityId = select.value;
+    localStorage.setItem("cityId", selectedCityId);
+    renderRamadhanCalendar();
+  };
 }
-async function loadPrayerTimes(){
-  if(!selectedCityId) return;
 
-  const today = new Date();
-  const y = today.getFullYear();
-  const m = String(today.getMonth()+1).padStart(2,"0");
-  const d = String(today.getDate()).padStart(2,"0");
-
-  try{
-    const res = await fetch(
-      `https://api.myquran.com/v1/sholat/jadwal/${selectedCityId}/${y}/${m}/${d}`
-    );
-    const json = await res.json();
-    const j = json.data.jadwal;
-
-    // simpan jam penting
-    localStorage.setItem("sahurTime", j.imsak || j.subuh);
-    localStorage.setItem("bukaTime", j.maghrib);
-
-    sahurTime = j.imsak || j.subuh;
-    bukaTime  = j.maghrib;
-
-  }catch(e){
-    console.warn("Gagal load jadwal", e);
-  }
-}
+/* ===== KALENDER ===== */
 async function renderRamadhanCalendar(){
   const container = document.getElementById("kalender-ramadhan");
-  if(!container || !ramadhanStartDate){
-    container.innerHTML = "⚠️ Silakan set Tanggal Mulai Ramadhan";
-    return;
-  }
+  if(!container || !ramadhanStartDate) return;
+
+  container.innerHTML = "";
 
   const start = new Date(ramadhanStartDate);
+  const today = new Date();
+
   const cityName =
     document.querySelector("#citySelect option:checked")?.textContent || "";
 
-  // Judul kalender (kota 1x saja)
-  const title = document.getElementById("judulKalender");
-  if(title && cityName){
-    title.textContent = `📅 Kalender Ramadhan – ${cityName}`;
-  }
-
-  let html = "";
+  document.getElementById("judulKalender").textContent =
+    `📅 Kalender Ramadhan – ${cityName}`;
 
   for(let i=0;i<30;i++){
     const d = new Date(start);
     d.setDate(start.getDate()+i);
 
-    const isToday =
-      d.toDateString() === new Date().toDateString();
+    const isToday = d.toDateString() === today.toDateString();
 
-    const apiDate = `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,"0")}/${String(d.getDate()).padStart(2,"0")}`;
+    const card = document.createElement("div");
+    card.className = "ramadhan-day" + (isToday ? " today" : "");
 
-    const displayDate = d.toLocaleDateString("id-ID", {
-      weekday:"short",
-      day:"2-digit",
-      month:"short"
-    });
-
-    const times = await getPrayerTimesByDate(apiDate);
-
-    html += `
-      <div class="ramadhan-day ${isToday ? "today" : ""}">
-        <h4>Hari ${i+1}</h4>
-        <strong>${displayDate}</strong><br>
-        🌙 Sahur: ${times.imsak}<br>
-        🌅 Buka: ${times.maghrib}
-      </div>
+    card.innerHTML = `
+      <h4>Hari ${i+1}</h4>
+      <strong>${d.toLocaleDateString("id-ID",{
+        weekday:"short",
+        day:"2-digit",
+        month:"short"
+      })}</strong>
     `;
-  }
 
-  container.innerHTML = html;
+    container.appendChild(card);
+
+    if(isToday){
+      setTimeout(()=>card.scrollIntoView({behavior:"smooth",inline:"center"}),300);
+    }
+  }
 }
 
 async function getPrayerTimesByDate(date){
