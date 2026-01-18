@@ -682,102 +682,84 @@ body.dark .ramadhan-day{
   border-radius: 12px;
   font-size: 14px;
 }
-/* ============================= */
-/* 🌙 KALENDER RAMADHAN FINAL */
-/* ============================= */
+/* ===== RAMADHAN ===== */
+.ramadhan-wrapper {
+  margin-top: 20px;
+}
+
+.ramadhan-title {
+  margin-bottom: 12px;
+}
+
+.ramadhan-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.ramadhan-card {
+  background: rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.ramadhan-input {
+  display: flex;
+  gap: 10px;
+}
+
+.ramadhan-input label {
+  flex: 1;
+  font-size: 14px;
+}
+
+.ramadhan-input input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 10px;
+  border: none;
+}
+
+select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: none;
+}
+
+.hint {
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+/* ===== KALENDER ===== */
+.ramadhan-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 6px;
+}
 
 #kalender-ramadhan {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 14px;
-  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  min-width: max-content;
 }
 
 .ramadhan-day {
-  background: linear-gradient(135deg, #e8f5e9, #ffffff);
+  min-width: 130px;
+  background: rgba(255,255,255,0.18);
   border-radius: 14px;
-  padding: 14px;
-  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-  font-size: 13px;
-  line-height: 1.5;
-  transition: transform 0.2s ease;
-}
-
-.ramadhan-day:hover {
-  transform: translateY(-2px);
+  padding: 12px;
+  text-align: center;
+  flex-shrink: 0;
 }
 
 .ramadhan-day h4 {
   margin: 0 0 6px;
-  font-size: 14px;
-  color: #2e7d32;
 }
 
-/* HARI INI */
 .ramadhan-day.today {
-  border: 2px solid #ff9800;
-  background: linear-gradient(135deg, #fff3e0, #ffffff);
-}
-
-/* DARK MODE */
-body.dark .ramadhan-day {
-  background: #1f2933;
-  color: #e5e7eb;
-}
-
-body.dark .ramadhan-day h4 {
-  color: #bbf7d0;
-}
-
-/* HP */
-@media (max-width: 480px) {
-  #kalender-ramadhan {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-/* =========================
-   RAMADHAN CALENDAR GRID
-========================= */
-
-.ramadhan-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin-top: 12px;
-}
-
-@media (min-width: 768px) {
-  .ramadhan-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-.ramadhan-day {
-  background: rgba(255,255,255,0.12);
-  border-radius: 12px;
-  padding: 10px;
-  font-size: 13px;
+  background: linear-gradient(135deg, #ff9800, #ff5722);
   color: #fff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-}
-
-.ramadhan-day h4 {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 700;
-}
-
-.ramadhan-day strong {
-  display: block;
-  margin: 4px 0;
-  font-size: 12px;
-  opacity: 0.9;
-}
-
-/* Hari ini */
-.ramadhan-day.today {
-  background: linear-gradient(135deg, #ffd54f, #ffb300);
-  color: #000;
-  font-weight: bold;
 }
 
