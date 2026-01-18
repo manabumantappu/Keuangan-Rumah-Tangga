@@ -54,11 +54,11 @@ body.ramadhan{background:linear-gradient(135deg,#1b5e20,#004d40)}
   background: #b71c1c;
 }
 .undo-btn {
+  display:inline-block
   background: #1565c0;
   color: white;
   font-weight: 700;
   padding: 12px 20px;
-  border: none;
   border-radius: 12px;
   cursor: pointer;
  }
@@ -619,17 +619,6 @@ body.compact .dashboard {
 
 body.compact .container {
   padding-bottom: 120px;
-}
-/* ===== FIX JARAK RESET & UNDO (FINAL) ===== */
-.reset-buttons {
-  display: flex;
-  flex-direction: column;
-  row-gap: 18px;      /* JARAK TEGAS */
-  margin-top: 16px;
-}
-
-.reset-buttons > button {
-  width: 100%;
 }
 
 
