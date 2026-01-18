@@ -8,7 +8,6 @@
 let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
 let selectedMonth = "";
 let selectedUser = "all";
-let isRamadhan = false;
 let editIndex = null;
 
 
