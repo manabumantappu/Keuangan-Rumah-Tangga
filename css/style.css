@@ -682,4 +682,57 @@ body.dark .ramadhan-day{
   border-radius: 12px;
   font-size: 14px;
 }
+/* ============================= */
+/* 🌙 KALENDER RAMADHAN FINAL */
+/* ============================= */
+
+#kalender-ramadhan {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.ramadhan-day {
+  background: linear-gradient(135deg, #e8f5e9, #ffffff);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  font-size: 13px;
+  line-height: 1.5;
+  transition: transform 0.2s ease;
+}
+
+.ramadhan-day:hover {
+  transform: translateY(-2px);
+}
+
+.ramadhan-day h4 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: #2e7d32;
+}
+
+/* HARI INI */
+.ramadhan-day.today {
+  border: 2px solid #ff9800;
+  background: linear-gradient(135deg, #fff3e0, #ffffff);
+}
+
+/* DARK MODE */
+body.dark .ramadhan-day {
+  background: #1f2933;
+  color: #e5e7eb;
+}
+
+body.dark .ramadhan-day h4 {
+  color: #bbf7d0;
+}
+
+/* HP */
+@media (max-width: 480px) {
+  #kalender-ramadhan {
+    grid-template-columns: 1fr 1fr;
+  }
+}
 
