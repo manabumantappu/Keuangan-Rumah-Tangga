@@ -620,16 +620,16 @@ body.compact .dashboard {
 body.compact .container {
   padding-bottom: 120px;
 }
-/* ===== RESET & UNDO BUTTON FIX ===== */
+/* ===== FIX JARAK RESET & UNDO (FINAL) ===== */
 .reset-buttons {
   display: flex;
   flex-direction: column;
-  gap: 20px !important;        /* jarak ideal */
+  row-gap: 18px;      /* JARAK TEGAS */
   margin-top: 16px;
 }
 
-.reset-buttons button {
-  width: 100%;     /* sejajar rapi */
+.reset-buttons > button {
+  width: 100%;
 }
 
 
