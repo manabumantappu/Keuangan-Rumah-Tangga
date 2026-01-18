@@ -265,57 +265,56 @@
   </div>
 </footer>
 
-<script>
-function renderKalenderRamadhan() {
-  const startVal = document.getElementById("ramadhanStart").value;
-  const endVal = document.getElementById("ramadhanEnd").value;
-  
- const citySelect = document.getElementById("citySelect");
- const kota = citySelect.selectedOptions[0]?.text || "";
+<!-- ============================= -->
+<!-- 🌙 BLOK RAMADHAN -->
+<!-- ============================= -->
+<section class="ramadhan-wrapper">
 
-  const judul = document.getElementById("judulKalender");
-judul.textContent = kota
-  ? `📅 Kalender Ramadhan — ${kota}`
-  : "📅 Kalender Ramadhan";
+  <h2 class="ramadhan-title">🌙 Ramadhan</h2>
 
-  if (!startVal || !endVal) return;
+  <!-- PENGATURAN RAMADHAN -->
+  <div class="ramadhan-card">
+    <h3>🗓️ Pengaturan Ramadhan</h3>
 
-  const startDate = new Date(startVal);
-  const endDate = new Date(endVal);
+    <div class="ramadhan-input">
+      <label>
+        Tanggal Mulai
+        <input type="date" id="ramadhanStart" value="2026-02-18">
+      </label>
 
-  const kalender = document.getElementById("kalender-ramadhan");
-  kalender.innerHTML = "";
+      <label>
+        Tanggal Akhir
+        <input type="date" id="ramadhanEnd" value="2026-03-19">
+      </label>
+    </div>
 
-  let hari = 1;
+    <p class="hint">
+      Digunakan untuk reminder otomatis, sedekah & zakat Ramadhan
+    </p>
+  </div>
 
-  for (let d = new Date(startDate); d <= endDate; d.setDate(d.getDate() + 1)) {
-    const item = document.createElement("div");
-    item.className = "hari";
+  <!-- KOTA JADWAL PUASA -->
+  <div class="ramadhan-card">
+    <h3>📍 Kota Jadwal Puasa</h3>
 
-    item.innerHTML = `
-      <strong>Hari ${hari}</strong>
-      <span>${d.toLocaleDateString("id-ID", {
-        weekday: "short",
-        day: "2-digit",
-        month: "short"
-      })}</span>
-     `;
+    <select id="citySelect">
+      <option value="">-- Pilih Kota --</option>
+      <!-- option kota dari app.js / manual -->
+    </select>
 
-    kalender.appendChild(item);
-    hari++;
-  }
-}
+    <p class="hint">
+      Jadwal sahur & buka mengikuti Kemenag RI
+    </p>
+  </div>
 
-document.addEventListener("DOMContentLoaded", () => {
-  // LISTENER
-  ["ramadhanStart", "ramadhanEnd", "citySelect"].forEach(id => {
-    document.getElementById(id).addEventListener("change", renderKalenderRamadhan);
-  });
+  <!-- KALENDER RAMADHAN -->
+  <div class="ramadhan-card">
+    <h3 id="judulKalender">📅 Kalender Ramadhan</h3>
+    <div id="kalender-ramadhan" class="kalender"></div>
+  </div>
 
-  // 🔥 INI KUNCI UTAMA
-  renderKalenderRamadhan();
-});
-</script>
+</section>
+
 
 
 
