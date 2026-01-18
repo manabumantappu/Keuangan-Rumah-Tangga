@@ -115,9 +115,9 @@
 </section>
   
  <!-- KALENDER RAMADHAN -->
-<section class="analysis-section">
+<section class="card">
   <h2>📅 Kalender Ramadhan</h2>
-  <div id="ramadhanCalendar" class="ramadhan-calendar"></div>
+  <div id="kalender-ramadhan" class="kalender"></div>
 </section>
 
 
@@ -265,6 +265,35 @@
   </div>
 </footer>
 
+<script>
+function buatKalenderRamadhan() {
+  const mulai = new Date("2026-02-18");
+  const akhir = new Date("2026-03-19");
+  const kalender = document.getElementById("kalender-ramadhan");
+
+  kalender.innerHTML = "";
+
+  let hariKe = 1;
+  for (let tgl = new Date(mulai); tgl <= akhir; tgl.setDate(tgl.getDate() + 1)) {
+    const div = document.createElement("div");
+    div.className = "hari";
+
+    div.innerHTML = `
+      <strong>Hari ${hariKe}</strong>
+      <span>${tgl.toLocaleDateString("id-ID", {
+        weekday: "short",
+        day: "2-digit",
+        month: "short"
+      })}</span>
+    `;
+
+    kalender.appendChild(div);
+    hariKe++;
+  }
+}
+
+document.addEventListener("DOMContentLoaded", buatKalenderRamadhan);
+</script>
 
 
 
