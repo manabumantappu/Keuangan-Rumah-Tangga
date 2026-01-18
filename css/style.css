@@ -357,32 +357,31 @@ body.ramadhan #quoteText {
   color: #fef3c7;
 }
 .export-btn {
-  background: #0f766e;
+  background: linear-gradient(135deg, #059669, #16a34a);
   color: #fff;
   font-weight: 700;
   padding: 12px 20px;
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  margin-right: 10px;
 }
 
 .export-btn:hover {
-  background: #115e59;
+  background: linear-gradient(135deg, #047857, #15803d);
 }
 
 .import-btn {
-  display: inline-block;
-  background: #2563eb;
+  background: linear-gradient(135deg, #7c3aed, #6366f1);
   color: #fff;
   font-weight: 700;
   padding: 12px 20px;
+  border: none;
   border-radius: 12px;
   cursor: pointer;
 }
 
 .import-btn:hover {
-  background: #1d4ed8;
+  background: linear-gradient(135deg, #6d28d9, #4f46e5);
 }
 /* ======================
    MOBILE FRIENDLY (HP)
