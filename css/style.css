@@ -670,4 +670,16 @@ body.dark .ramadhan-day{
   }
 }
 
+#kalender-ramadhan {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.ramadhan-day {
+  background: #fff8e1;
+  padding: 12px;
+  border-radius: 12px;
+  font-size: 14px;
+}
 
