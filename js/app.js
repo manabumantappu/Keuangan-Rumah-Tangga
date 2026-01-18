@@ -10,9 +10,6 @@ let selectedMonth = "";
 let selectedUser = "all";
 let isRamadhan = false;
 let editIndex = null;
-let ramadhanStartDate = null;
-let ramadhanEndDate   = null;
-let selectedCityId = null;
 
 
 /* ===== DOM ===== */
@@ -29,33 +26,6 @@ let zakatIncomeEl, zakatMaalEl, zakatNoteEl;
 document.addEventListener("DOMContentLoaded", init);
 
 function init(){
-// SETTING TGL.RAMADHAN
-const ramadhanStartInput = document.getElementById("ramadhanStart");
-const ramadhanEndInput   = document.getElementById("ramadhanEnd");
-
-// load dari storage
-ramadhanStartDate = localStorage.getItem("ramadhanStart");
-ramadhanEndDate   = localStorage.getItem("ramadhanEnd");
-
-if(ramadhanStartDate) ramadhanStartInput.value = ramadhanStartDate;
-if(ramadhanEndDate)   ramadhanEndInput.value   = ramadhanEndDate;
-
-// simpan saat berubah
-ramadhanStartInput.onchange = () => {
-  const val = ramadhanStartInput.value; // YYYY-MM-DD
-  if(!val) return;
-
-  ramadhanStartDate = val;
-  localStorage.setItem("ramadhanStart", val);
-
-  checkRamadhanAuto();
-  renderKalenderRamadhanSimple();
-
-   document.getElementById("ramadhanStart")
-  ?.addEventListener("change", renderKalenderRamadhanSimple);
-
-};
-
 
 ramadhanEndInput.onchange = () => {
   localStorage.setItem("ramadhanEnd", ramadhanEndInput.value);
@@ -108,16 +78,7 @@ zakatNoteEl   = document.getElementById("zakatNote");
   setupQuotes();
   setupImport();
   update();
-  checkRamadhanAuto();// RAMADHAN SETTING
-  loadCities();
-   
-// ⬇️ TAMBAH
-setTimeout(() => {
-  if (localStorage.getItem("ramadhanStart")) {
-    renderRamadhanCalendar();
-  }
-}, 500);
-}
+ 
 
 /* ===== CORE ===== */
 function onSubmit(e){
