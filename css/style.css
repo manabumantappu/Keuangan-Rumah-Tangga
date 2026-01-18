@@ -624,7 +624,7 @@ body.compact .container {
 .reset-buttons {
   display: flex;
   flex-direction: column;
-  gap: 14px;        /* jarak ideal */
+  gap: 16px;        /* jarak ideal */
   margin-top: 12px;
 }
 
