@@ -491,7 +491,7 @@ button,
   font-size: 28px;
   border: none;
   box-shadow: 0 10px 25px rgba(0,0,0,.3);
-  z-index: 999;
+  z-index: 500;
 }
 .fab:active {
   transform: scale(.95);
@@ -511,7 +511,7 @@ button,
     background: #0f766e;
     justify-content: space-around;
     padding: 10px 0;
-    z-index: 998;
+    z-index: 400;
   }
 
   .bottom-nav button {
@@ -620,4 +620,14 @@ body.compact .container {
   padding-bottom: 120px;
 }
 
-
+.analysis-section {
+  position: relative;
+  z-index: 1000;
+}
+#importFile {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
