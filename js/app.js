@@ -386,7 +386,13 @@ window.exportData = ()=>{
   a.download="keuangan-rumah-tangga.json";
   a.click();
 };
-window.triggerImport = ()=>document.getElementById("importFile").click();
+window.triggerImport = () => {
+  const input = document.getElementById("importFile");
+  if (!input) return;
+
+  input.value = "";   // ⬅️ PENTING untuk HP
+  input.click();      // ⬅️ HARUS dari klik user
+};
 function setupImport(){
   const i=document.getElementById("importFile");
   if(!i) return;
